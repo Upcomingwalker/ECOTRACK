@@ -6,13 +6,16 @@ const WALLPAPERS = [
   "https://images.unsplash.com/photo-1465101178521-c1a9136a3a2e?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1200&q=80"
 ];
+
 function E(id) { return document.getElementById(id); }
 function $$(sel) { return Array.from(document.querySelectorAll(sel)); }
+
 function setWallpaper() {
   let idx = Math.floor(Math.random() * WALLPAPERS.length);
   localStorage.setItem("eco_wallpaper_idx", idx);
   E('wallpaper').style.backgroundImage = `url('${WALLPAPERS[idx]}')`;
 }
+
 function updateDesktopClock() {
   const clock = E('desktopClock');
   function pad(n) { return n < 10 ? '0' + n : n; }
@@ -25,12 +28,16 @@ function updateDesktopClock() {
   animClock();
   setInterval(animClock, 1000);
 }
+
 function saveNotes(notes) { localStorage.setItem('eco_notes', JSON.stringify(notes)); }
 function loadNotes() { try { return JSON.parse(localStorage.getItem('eco_notes')) || []; } catch { return []; } }
+
 function saveChatHistory(msgs) { localStorage.setItem('eco_chat', JSON.stringify(msgs)); }
 function loadChatHistory() { try { return JSON.parse(localStorage.getItem('eco_chat')) || []; } catch { return []; } }
+
 function saveCalc(result) { localStorage.setItem('eco_calculator_result', JSON.stringify(result)); }
 function loadCalc() { try { return JSON.parse(localStorage.getItem('eco_calculator_result')) || null; } catch { return null; } }
+
 class EcoTrackOS {
   constructor() {
     this.activeWindows = new Set();
@@ -59,18 +66,21 @@ class EcoTrackOS {
     const launcherBtn = E('launcherBtn');
     const appLauncher = E('appLauncher');
     const runningAppsDiv = E('runningApps');
+
     launcherBtn.onclick = () => {
       appLauncher.classList.toggle('hidden');
       if (!appLauncher.classList.contains('hidden')) {
         E('launcherSearch').focus();
       }
     };
+
     $$('.launcher-app').forEach(btn => {
       btn.onclick = () => {
         this.launchApp(btn.dataset.app);
         appLauncher.classList.add('hidden');
       };
     });
+
     const searchInput = E('launcherSearch');
     searchInput.oninput = () => {
       const search = searchInput.value.toLowerCase();
@@ -79,6 +89,7 @@ class EcoTrackOS {
         appBtn.style.display = name.includes(search) ? 'flex' : 'none';
       });
     };
+
     document.addEventListener('keydown', e => {
       if (e.key === "Escape") {
         if (!appLauncher.classList.contains('hidden')) {
@@ -87,12 +98,14 @@ class EcoTrackOS {
         }
       }
     });
+
     document.addEventListener('click', e => {
       if (!appLauncher.classList.contains('hidden') &&
-         !appLauncher.contains(e.target) && e.target !== launcherBtn) {
+          !appLauncher.contains(e.target) && e.target !== launcherBtn) {
         appLauncher.classList.add('hidden');
       }
     });
+
     this.runningAppsDiv = runningAppsDiv;
   }
   setupWindowControls() {
@@ -105,12 +118,14 @@ class EcoTrackOS {
         this.updateTaskbar();
       };
     });
+
     $$('.window-btn.maximize-btn').forEach(btn => {
       btn.onclick = () => {
         const win = btn.closest('.app-window');
         win.classList.toggle('maximized');
       };
     });
+
     $$('.window-btn.close-btn').forEach(btn => {
       btn.onclick = () => {
         const win = btn.closest('.app-window');
@@ -230,4 +245,165 @@ class EcoTrackOS {
     if (last) this.displayCalculatorResults(last);
   }
   displayCalculatorResults(result) {
-    const results
+    const resultsDiv = E('calculatorResults');
+    resultsDiv.classList.remove('hidden');
+    E('co2Value').textContent = result.co2_tons_per_year;
+    const tipsDiv = E('ecoTips');
+    tipsDiv.innerHTML = '';
+    result.tips.forEach(tip => {
+      const d = document.createElement('div');
+      d.className = 'eco-tip visible';
+      d.textContent = tip;
+      tipsDiv.appendChild(d);
+    });
+  }
+  initializeChatbotApp() {
+    const chatMessages = E('chatMessages');
+    const chatInput = E('chatInput');
+    const sendBtn = E('chatSendBtn');
+    let history = loadChatHistory();
+    chatMessages.innerHTML = '';
+    history.forEach(m => this.addChatMessage(m.text, m.sender));
+    sendBtn.onclick = () => {
+      const msg = chatInput.value.trim();
+      if (!msg) {
+        chatInput.focus();
+        return;
+      }
+      this.addChatMessage(msg, 'user');
+      chatInput.value = '';
+      chatInput.focus();
+      setTimeout(() => {
+        const reply = "EcoBot tip: Save power by unplugging chargers when not in use.";
+        this.addChatMessage(reply, 'bot');
+        const allMessages = [...chatMessages.querySelectorAll('.chat-message')].map(el => ({
+          text: el.querySelector('.message-text').textContent,
+          sender: el.classList.contains('user-message') ? 'user' : 'bot'
+        }));
+        saveChatHistory(allMessages);
+      }, 800);
+    };
+  }
+  addChatMessage(text, sender) {
+    const container = E('chatMessages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `chat-message ${sender}-message visible`;
+    if(sender === 'user') msgDiv.classList.add('user-message'); else msgDiv.classList.add('bot-message');
+    msgDiv.setAttribute('role', 'listitem');
+    msgDiv.innerHTML = `
+      <div class="message-avatar" aria-hidden="true">${sender === 'user' ? '👤' : '🤖'}</div>
+      <div class="message-content message-text">${text}</div>
+    `;
+    container.appendChild(msgDiv);
+    container.scrollTop = container.scrollHeight;
+  }
+  initializeDashboardApp() {
+    const co2El = E('statCO2').querySelector('.stat-value');
+    const treesEl = E('statTrees').querySelector('.stat-value');
+    const waterEl = E('statWater').querySelector('.stat-value');
+    let c = 0, t = 0, w = 0;
+    const targetC = 1245;
+    const targetT = 310;
+    const targetW = 54000;
+    const animInterval = setInterval(() => {
+      if (c < targetC) c += 35;
+      if (t < targetT) t += 10;
+      if (w < targetW) w += 1500;
+      co2El.textContent = Math.min(c, targetC);
+      treesEl.textContent = Math.min(t, targetT);
+      waterEl.textContent = Math.min(w, targetW);
+      if (c >= targetC && t >= targetT && w >= targetW) clearInterval(animInterval);
+    }, 30);
+  }
+  async initializeNewsApp() {
+    const newsFeed = E('newsFeed');
+    newsFeed.innerHTML = '<p>Loading news...</p>';
+    const articles = [
+      {
+        title: "Climate Change Awareness Rises Globally",
+        summary: "Countries are taking steps to reduce emissions and promote sustainable energy...",
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+        date: new Date().toLocaleDateString()
+      },
+      {
+        title: "Ocean Conservation Efforts Yield Results",
+        summary: "Marine protected areas are expanding to safeguard biodiversity and fisheries...",
+        image: "https://images.unsplash.com/photo-1465101178521-c1a9136a3a2e?auto=format&fit=crop&w=400&q=80",
+        date: new Date().toLocaleDateString()
+      }
+    ];
+    newsFeed.innerHTML = '';
+    articles.forEach(article => {
+      const div = document.createElement('div');
+      div.className = 'news-article loaded';
+      div.tabIndex = 0;
+      div.innerHTML = `
+        <img class="news-image" src="${article.image}" alt="News image: ${article.title}" />
+        <div class="news-content">
+          <h4 class="news-title">${article.title}</h4>
+          <p class="news-summary">${article.summary}</p>
+          <div class="news-date">${article.date}</div>
+        </div>
+      `;
+      newsFeed.appendChild(div);
+    });
+  }
+  initializeNotesApp() {
+    this.renderNotes();
+    const btn = E('newNoteBtn');
+    btn.onclick = () => {
+      const txt = prompt('Enter new note:');
+      if (!txt) return;
+      const notes = loadNotes();
+      notes.push({ id: Date.now(), text: txt });
+      saveNotes(notes);
+      this.renderNotes();
+    };
+  }
+  renderNotes() {
+    const list = E('notesList');
+    const notes = loadNotes();
+    list.innerHTML = '';
+    notes.forEach(n => {
+      const d = document.createElement('div');
+      d.className = 'note-item visible';
+      d.innerHTML = `
+        <div class="note-content" tabindex="0" aria-label="Note">${n.text}</div>
+        <button class="note-delete" aria-label="Delete note">×</button>
+      `;
+      d.querySelector('.note-delete').onclick = () => {
+        const updated = loadNotes().filter(x => x.id !== n.id);
+        saveNotes(updated);
+        this.renderNotes();
+      };
+      list.appendChild(d);
+    });
+  }
+  initializeGalleryApp() {
+    const galleryData = [
+      { url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80", title: "Forest Conservation", description: "Protecting old growth forests" },
+      { url: "https://images.unsplash.com/photo-1473773508845-188df298d2d1?auto=format&fit=crop&w=800&q=80", title: "Renewable Energy", description: "Wind turbines generating clean power" },
+      { url: "https://images.unsplash.com/photo-1569163139394-de44333f1e5c?auto=format&fit=crop&w=800&q=80", title: "Sustainable Living", description: "Eco-friendly lifestyle choices" },
+      { url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80", title: "Ocean Conservation", description: "Protecting marine ecosystems" },
+      { url: "https://images.unsplash.com/photo-1536431311719-398b6704d4cc?auto=format&fit=crop&w=800&q=80", title: "Green Transportation", description: "Electric vehicles and sustainable transport" }
+    ];
+    const galleryGrid = E('galleryGrid');
+    galleryGrid.innerHTML = '';
+    galleryData.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'gallery-item visible';
+      div.tabIndex = 0;
+      div.setAttribute('aria-label', `Gallery item: ${item.title}`);
+      div.innerHTML = `<img src="${item.url}" alt="${item.title}" class="gallery-image" />`;
+      galleryGrid.appendChild(div);
+    });
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  setWallpaper();
+  const os = new EcoTrackOS();
+  os.showLoadingScreen().then(() => {
+    os.init();
+  });
+});
