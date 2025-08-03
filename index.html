@@ -8,21 +8,10 @@
 <script defer src="app.js"></script>
 </head>
 <body>
-  <!-- Wallpaper -->
   <div id="wallpaper" class="wallpaper"></div>
-
-  <!-- Desktop Name -->
   <div class="desktop-name">EcoTrack OS</div>
-
-  <!-- Desktop Clock -->
   <div id="desktopClock" class="desktop-clock"></div>
-
-  <!-- Desktop (icons area) -->
-  <main class="desktop" tabindex="0" aria-label="Desktop workspace">
-    <!-- No app icons here; apps only in All Apps menu -->
-  </main>
-
-  <!-- Taskbar -->
+  <main class="desktop" tabindex="0" aria-label="Desktop workspace"></main>
   <nav class="taskbar" role="navigation" aria-label="Taskbar">
     <button id="launcherBtn" class="launcher-btn" aria-label="Open Apps Launcher" title="All Apps">
       <div class="launcher-icon" aria-hidden="true">
@@ -36,8 +25,6 @@
       <div id="trayTime" class="tray-time" aria-live="time">--:--:--</div>
     </div>
   </nav>
-
-  <!-- App Launcher -->
   <section id="appLauncher" class="app-launcher hidden" role="region" aria-label="All Apps Launcher">
     <header class="launcher-header">
       <input type="search" id="launcherSearch" class="launcher-search" placeholder="Search apps..." aria-label="Search apps" />
@@ -73,10 +60,6 @@
       </button>
     </div>
   </section>
-
-  <!-- App Windows -->
-
-  <!-- Eco Calculator -->
   <section id="eco-calculator-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Eco Calculator App Window" tabindex="-1">
     <header class="window-header">
       <span class="window-title"><span class="window-icon">🧮</span> Eco Calculator</span>
@@ -117,8 +100,6 @@
       </div>
     </section>
   </section>
-
-  <!-- AI Chatbot -->
   <section id="ai-chatbot-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="AI Chatbot App Window" tabindex="-1">
     <header class="window-header">
       <span class="window-title"><span class="window-icon">🤖</span> AI Chatbot</span>
@@ -136,8 +117,6 @@
       </div>
     </section>
   </section>
-
-  <!-- Impact Dashboard -->
   <section id="impact-dashboard-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Impact Dashboard App Window" tabindex="-1">
     <header class="window-header">
       <span class="window-title"><span class="window-icon">📊</span> Impact Dashboard</span>
@@ -162,13 +141,9 @@
           <div class="stat-label">Water Saved (L)</div>
         </div>
       </div>
-      <div class="dashboard-charts">
-        <!-- Placeholder for charts if you want to add later -->
-      </div>
+      <div class="dashboard-charts"></div>
     </section>
   </section>
-
-  <!-- News Feed -->
   <section id="news-feed-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="News Feed App Window" tabindex="-1">
     <header class="window-header">
       <span class="window-title"><span class="window-icon">📰</span> News Feed</span>
@@ -180,8 +155,6 @@
     </header>
     <section class="window-content news-container" id="newsFeed" aria-live="polite" aria-label="Latest Environmental News"></section>
   </section>
-
-  <!-- Notes -->
   <section id="notes-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Notes App Window" tabindex="-1">
     <header class="window-header">
       <span class="window-title"><span class="window-icon">📝</span> Notes</span>
@@ -198,8 +171,6 @@
       <div id="notesList" class="notes-list" aria-live="polite" aria-label="Notes list"></div>
     </section>
   </section>
-
-  <!-- Media Gallery -->
   <section id="media-gallery-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Media Gallery App Window" tabindex="-1">
     <header class="window-header">
       <span class="window-title"><span class="window-icon">🖼️</span> Gallery</span>
@@ -214,8 +185,6 @@
       <div id="galleryGrid" class="gallery-grid" aria-live="polite" aria-label="Gallery images"></div>
     </section>
   </section>
-
-  <!-- About -->
   <section id="about-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="About EcoTrack OS Window" tabindex="-1">
     <header class="window-header">
       <span class="window-title"><span class="window-icon">ℹ️</span> About EcoTrack OS</span>
@@ -242,11 +211,7 @@
       <p>© 2025 Tanuj Sharma &amp; Sparsh Jain, Lovely Public School</p>
     </section>
   </section>
-
-  <!-- Custom Cursor -->
   <div id="customCursor" aria-hidden="true"></div>
-
-  <!-- Loading Screen -->
   <div id="loadingScreen" class="loading-screen" aria-label="Loading">
     <div class="loading-content">
       <div class="loading-logo" aria-hidden="true">🌿</div>
