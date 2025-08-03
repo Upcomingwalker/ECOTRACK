@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EcoTrack OS – Chrome OS Replica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Chart.js for Dashboard charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <!-- GSAP for animations -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Desktop & Wallpaper -->
+  <div class="desktop">
+    <div id="wallpaper" class="wallpaper"></div>
+    <div id="desktopClock" class="desktop-clock"></div>
+    <div class="desktop-icons">
+      <div class="desktop-icon" data-app="eco-calculator"><div class="icon">🌱</div><div class="label">Eco Calculator</div></div>
+      <div class="desktop-icon" data-app="ai-chatbot"><div class="icon">🤖</div><div class="label">EcoBot</div></div>
+      <div class="desktop-icon" data-app="impact-dashboard"><div class="icon">📊</div><div class="label">Dashboard</div></div>
+      <div class="desktop-icon" data-app="news-feed"><div class="icon">📰</div><div class="label">Eco News</div></div>
+      <div class="desktop-icon" data-app="notes"><div class="icon">📝</div><div class="label">Notes</div></div>
+      <div class="desktop-icon" data-app="media-gallery"><div class="icon">🖼️</div><div class="label">Gallery</div></div>
+      <div class="desktop-icon" data-app="about"><div class="icon">ℹ️</div><div class="label">About</div></div>
+    </div>
+  </div>
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <div class="launcher-btn" id="launcherBtn">
+      <span class="launcher-icon">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </span>
+    </div>
+    <div class="running-apps" id="runningApps"></div>
+    <div class="system-tray">
+      <span class="tray-time" id="systemTime"></span>
+    </div>
+  </div>
+  <!-- App Launcher -->
+  <div class="app-launcher hidden" id="appLauncher">
+    <div class="launcher-header">
+      <input type="text" class="launcher-search" id="launcherSearch" placeholder="Search apps...">
+    </div>
+    <div class="launcher-grid">
+      <div class="launcher-app" data-app="eco-calculator"><span class="launcher-app-icon">🌱</span><span class="launcher-app-name">Eco Calculator</span></div>
+      <div class="launcher-app" data-app="ai-chatbot"><span class="launcher-app-icon">🤖</span><span class="launcher-app-name">EcoBot</span></div>
+      <div class="launcher-app" data-app="impact-dashboard"><span class="launcher-app-icon">📊</span><span class="launcher-app-name">Impact Dashboard</span></div>
+      <div class="launcher-app" data-app="news-feed"><span class="launcher-app-icon">📰</span><span class="launcher-app-name">Eco News</span></div>
+      <div class="launcher-app" data-app="notes"><span class="launcher-app-icon">📝</span><span class="launcher-app-name">Notes</span></div>
+      <div class="launcher-app" data-app="media-gallery"><span class="launcher-app-icon">🖼️</span><span class="launcher-app-name">Gallery</span></div>
+      <div class="launcher-app" data-app="about"><span class="launcher-app-icon">ℹ️</span><span class="launcher-app-name">About</span></div>
+    </div>
+  </div>
+  <!-- Windows Container -->
+  <div class="windows-container">
+    <!-- Eco Calculator -->
+    <div id="eco-calculator-window" class="app-window hidden" data-app="eco-calculator">
+      <div class="window-header">
+        <span class="window-title"><span class="window-icon">🌱</span>Eco Calculator</span>
+        <div class="window-controls">
+          <button class="window-btn minimize-btn">–</button>
+          <button class="window-btn maximize-btn">□</button>
+          <button class="window-btn close-btn">×</button>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="calculator-form-container">
+          <h3>Calculate Your Carbon Footprint</h3>
+          <form id="ecoCalculatorForm" class="eco-calculator-form">
+            <div class="form-group">
+              <label for="transportation">Transportation Mode</label>
+              <select id="transportation" class="form-control">
+                <option value="">Select transportation</option>
+                <option>Car</option>
+                <option>Public Transport</option>
+                <option>Bicycle</option>
+                <option>Walking</option>
+                <option>Motorcycle</option>
+                <option>Electric Car</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="distance">Distance (km/month)</label>
+              <input id="distance" class="form-control" type="number" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="electricity">Electricity Usage (kWh/month)</label>
+              <input id="electricity" class="form-control" type="number" min="0" required>
+            </div>
+            <div class="form-group">
+              <label>Diet Type</label>
+              <div class="radio-group">
+                <label><input type="radio" name="diet" value="Vegetarian"> Vegetarian</label>
+                <label><input type="radio" name="diet" value="Non-vegetarian"> Non-vegetarian</label>
+                <label><input type="radio" name="diet" value="Vegan"> Vegan</label>
+                <label><input type="radio" name="diet" value="Pescatarian"> Pescatarian</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <button class="calculate-btn btn--primary" type="submit">
+                <span id="calcLoader" class="btn-loader hidden"></span> Calculate Impact
+              </button>
+            </div>
+          </form>
+          <div class="calculator-results hidden" id="calculatorResults">
+            <div class="results-header"><h4>Your Carbon Footprint</h4></div>
+            <div class="co2-display">
+              <span class="co2-value" id="co2Value">0</span>
+              <span class="co2-unit">tons CO₂/year</span>
+            </div>
+            <div class="eco-tips" id="ecoTips"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- EcoBot -->
+    <div id="ai-chatbot-window" class="app-window hidden" data-app="ai-chatbot">
+      <div class="window-header">
+        <span class="window-title"><span class="window-icon">🤖</span>EcoBot</span>
+        <div class="window-controls">
+          <button class="window-btn minimize-btn">–</button>
+          <button class="window-btn maximize-btn">□</button>
+          <button class="window-btn close-btn">×</button>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="chat-container">
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot-message">
+              <div class="message-avatar">🤖</div>
+              <div class="message-content">
+                <div class="message-text">Hi! I'm EcoBot, your AI assistant for sustainability questions. How can I help you reduce your environmental impact today?</div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-container">
+            <input id="chatInput" class="chat-input" type="text" placeholder="Type your question...">
+            <button id="chatSendBtn" class="chat-send-btn btn--primary">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Impact Dashboard -->
+    <div id="impact-dashboard-window" class="app-window hidden" data-app="impact-dashboard">
+      <div class="window-header">
+        <span class="window-title"><span class="window-icon">📊</span>Impact Dashboard</span>
+        <div class="window-controls">
+          <button class="window-btn minimize-btn">–</button>
+          <button class="window-btn maximize-btn">□</button>
+          <button class="window-btn close-btn">×</button>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="dashboard-container">
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="totalSavings">2.4</div>
+              <div class="stat-label">Tons CO₂ Saved</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="treesEquivalent">112</div>
+              <div class="stat-label">Trees Equivalent</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="monthlyReduction">18%</div>
+              <div class="stat-label">Monthly Reduction</div>
+            </div>
+          </div>
+          <div class="dashboard-charts">
+            <canvas id="savingsChart" height="100"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Eco News -->
+    <div id="news-feed-window" class="app-window hidden" data-app="news-feed">
+      <div class="window-header">
+        <span class="window-title"><span class="window-icon">📰</span>Eco News</span>
+        <div class="window-controls">
+          <button class="window-btn minimize-btn">–</button>
+          <button class="window-btn maximize-btn">□</button>
+          <button class="window-btn close-btn">×</button>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="news-container">
+          <div class="news-header">
+            <h3>Latest Sustainability News</h3>
+          </div>
+          <div class="news-feed" id="newsFeed"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Notes -->
+    <div id="notes-window" class="app-window hidden" data-app="notes">
+      <div class="window-header">
+        <span class="window-title"><span class="window-icon">📝</span>Notes</span>
+        <div class="window-controls">
+          <button class="window-btn minimize-btn">–</button>
+          <button class="window-btn maximize-btn">□</button>
+          <button class="window-btn close-btn">×</button>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="notes-container">
+          <div class="notes-toolbar">
+            <button class="notes-btn btn--primary" id="newNoteBtn">+ New Note</button>
+          </div>
+          <div class="notes-list" id="notesList"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Gallery -->
+    <div id="media-gallery-window" class="app-window hidden" data-app="media-gallery">
+      <div class="window-header">
+        <span class="window-title"><span class="window-icon">🖼️</span>Gallery</span>
+        <div class="window-controls">
+          <button class="window-btn minimize-btn">–</button>
+          <button class="window-btn maximize-btn">□</button>
+          <button class="window-btn close-btn">×</button>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="gallery-container">
+          <div class="gallery-header"><h3>Eco-Themed Gallery</h3></div>
+          <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+      </div>
+    </div>
+    <!-- About -->
+    <div id="about-window" class="app-window hidden" data-app="about">
+      <div class="window-header">
+        <span class="window-title"><span class="window-icon">ℹ️</span>About</span>
+        <div class="window-controls">
+          <button class="window-btn minimize-btn">–</button>
+          <button class="window-btn maximize-btn">□</button>
+          <button class="window-btn close-btn">×</button>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="about-container">
+          <h2>EcoTrack OS</h2>
+          <p>This website is made by <strong>Tanuj Sharma</strong> and <strong>Sparsh Jain</strong> of Class 11, Lovely Public School.</p>
+          <p>
+            EcoTrack OS replicates a desktop environment for learning about sustainability.<br>
+            Features:
+            <ul>
+              <li>Carbon footprint calculator</li>
+              <li>AI-powered EcoBot assistant</li>
+              <li>Impact dashboard</li>
+              <li>Eco news feed</li>
+              <li>Personal notes and eco gallery</li>
+              <li>Animated UX, desktop clock, wallpaper shuffle, and more</li>
+            </ul>
+          </p>
+          <hr>
+          <p style="font-size:13px;color:#888;">&copy; 2025 Tanuj Sharma &amp; Sparsh Jain, Lovely Public School</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Image Modal -->
+  <div class="image-modal hidden" id="imageModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <img class="modal-image" src="" alt="Gallery Image">
+      <div class="modal-info">
+        <div class="modal-title"></div>
+        <div class="modal-description"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-logo">🌿</div>
+      <div class="loading-text">EcoTrack OS</div>
+      <div class="loading-subtitle">Loading your eco-friendly desktop...</div>
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+  <!-- Custom cursor -->
+  <div id="customCursor"></div>
+  <!-- APP JS -->
+  <script src="app.js"></script>
+</body>
+</html>
