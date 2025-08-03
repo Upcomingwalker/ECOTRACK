@@ -6,16 +6,13 @@ const WALLPAPERS = [
   "https://images.unsplash.com/photo-1465101178521-c1a9136a3a2e?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1200&q=80"
 ];
-
 function E(id) { return document.getElementById(id); }
 function $$(sel) { return Array.from(document.querySelectorAll(sel)); }
-
 function setWallpaper() {
   let idx = Math.floor(Math.random() * WALLPAPERS.length);
   localStorage.setItem("eco_wallpaper_idx", idx);
   E('wallpaper').style.backgroundImage = `url('${WALLPAPERS[idx]}')`;
 }
-
 function updateDesktopClock() {
   const clock = E('desktopClock');
   function pad(n) { return n < 10 ? '0' + n : n; }
@@ -28,16 +25,12 @@ function updateDesktopClock() {
   animClock();
   setInterval(animClock, 1000);
 }
-
 function saveNotes(notes) { localStorage.setItem('eco_notes', JSON.stringify(notes)); }
 function loadNotes() { try { return JSON.parse(localStorage.getItem('eco_notes')) || []; } catch { return []; } }
-
 function saveChatHistory(msgs) { localStorage.setItem('eco_chat', JSON.stringify(msgs)); }
 function loadChatHistory() { try { return JSON.parse(localStorage.getItem('eco_chat')) || []; } catch { return []; } }
-
 function saveCalc(result) { localStorage.setItem('eco_calculator_result', JSON.stringify(result)); }
 function loadCalc() { try { return JSON.parse(localStorage.getItem('eco_calculator_result')) || null; } catch { return null; } }
-
 class EcoTrackOS {
   constructor() {
     this.activeWindows = new Set();
@@ -66,21 +59,18 @@ class EcoTrackOS {
     const launcherBtn = E('launcherBtn');
     const appLauncher = E('appLauncher');
     const runningAppsDiv = E('runningApps');
-
     launcherBtn.onclick = () => {
       appLauncher.classList.toggle('hidden');
       if (!appLauncher.classList.contains('hidden')) {
         E('launcherSearch').focus();
       }
     };
-
     $$('.launcher-app').forEach(btn => {
       btn.onclick = () => {
         this.launchApp(btn.dataset.app);
         appLauncher.classList.add('hidden');
       };
     });
-
     const searchInput = E('launcherSearch');
     searchInput.oninput = () => {
       const search = searchInput.value.toLowerCase();
@@ -89,7 +79,6 @@ class EcoTrackOS {
         appBtn.style.display = name.includes(search) ? 'flex' : 'none';
       });
     };
-
     document.addEventListener('keydown', e => {
       if (e.key === "Escape") {
         if (!appLauncher.classList.contains('hidden')) {
@@ -98,14 +87,12 @@ class EcoTrackOS {
         }
       }
     });
-
     document.addEventListener('click', e => {
       if (!appLauncher.classList.contains('hidden') &&
           !appLauncher.contains(e.target) && e.target !== launcherBtn) {
         appLauncher.classList.add('hidden');
       }
     });
-
     this.runningAppsDiv = runningAppsDiv;
   }
   setupWindowControls() {
@@ -118,14 +105,12 @@ class EcoTrackOS {
         this.updateTaskbar();
       };
     });
-
     $$('.window-btn.maximize-btn').forEach(btn => {
       btn.onclick = () => {
         const win = btn.closest('.app-window');
         win.classList.toggle('maximized');
       };
     });
-
     $$('.window-btn.close-btn').forEach(btn => {
       btn.onclick = () => {
         const win = btn.closest('.app-window');
@@ -399,7 +384,6 @@ class EcoTrackOS {
     });
   }
 }
-
 window.addEventListener('DOMContentLoaded', () => {
   setWallpaper();
   const os = new EcoTrackOS();
