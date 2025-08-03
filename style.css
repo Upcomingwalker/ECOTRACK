@@ -1,0 +1,63 @@
+/* EcoTrack OS Custom Cursor */
+body, .desktop, .app-window, .launcher-btn, .desktop-icon, .taskbar-app, .chat-send-btn, .notes-btn, .window-btn, .launcher-app, input, textarea, select, button {
+  cursor: url('https://cdn.jsdelivr.net/gh/hql287/cursors@latest/ecology/eco-pointer.cur'), auto !important;
+}
+
+/* Cursor follow animation for visual effect */
+#customCursor {
+  position: fixed;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 9999;
+  transition: filter 0.18s;
+  background: url('https://cdn.jsdelivr.net/gh/hql287/cursors@latest/ecology/eco-pointer.cur') no-repeat center center/contain;
+  filter: drop-shadow(0 3px 7px rgba(44,92,50,0.20));
+  opacity: 0.95;
+}
+
+/* Desktop Clock up top right */
+.desktop-clock {
+  position: fixed;
+  top: 22px;
+  right: 32px;
+  z-index: 2;
+  font-size: 1.98rem;
+  font-weight: 600;
+  color: #51b782;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  font-family: 'Geist', 'Roboto', sans-serif;
+  background: rgba(255,255,255,0.22);
+  padding: 10px 24px;
+  border-radius: 16px;
+  letter-spacing: 1.2px;
+  box-shadow: 0 2px 6px rgba(30,58,58, 0.08);
+  border: 1.5px solid #d2eee1;
+  animation: clock-fadein 1s cubic-bezier(0.77,0,0.2,1);
+}
+@keyframes clock-fadein { from { opacity:0; transform: translateY(-24px);} to {opacity:1; transform: none;} }
+
+/* Launcher animation; desktop, taskbar, etc., inherit from Perplexity’s design system as above... */
+
+/* Additional Animations for windows, news, chat, gallery (see below for targeted classes) */
+.app-window, .news-article, .chat-message, .eco-tip, .gallery-item, .stat-card, .note-item {
+  transition: box-shadow 0.24s, background 0.21s, opacity 0.33s, transform 0.24s cubic-bezier(.15,.67,.48,.91);
+}
+.news-article { opacity: 0; transform: translateY(30px) scale(0.98);}
+.news-article.loaded { opacity: 1; transform: none;}
+.chat-message, .eco-tip, .note-item { opacity:0; transform: translateY(18px);}
+.chat-message.visible, .eco-tip.visible, .note-item.visible { opacity:1; transform: none; }
+.gallery-item { opacity: 0; transform: scale(0.93);}
+.gallery-item.visible { opacity:1; transform: none; }
+.stat-card { opacity:0; transform:translateY(18px);}
+.stat-card.visible { opacity:1; transform:none;}
+/* --- rest of your provided _Perplexity Design System_ & Chrome OS styles from your prior style.css remain as is --- */
+
+/* Responsive: on mobile, clock moves in */
+@media (max-width:600px){
+  .desktop-clock { right: 12px; top:10px; font-size:1.2rem; padding: 8px 10px;}
+}
+/* Scrollbar pretty */
+::-webkit-scrollbar { width: 9px; background: #e8efe9;}
+::-webkit-scrollbar-thumb { background: #aaddc1; border-radius: 6px;}
