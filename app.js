@@ -269,4 +269,199 @@ class EcoTrackOS {
         const notes = loadFromStorage('eco_notes') || [];
         list.innerHTML = '';
         notes.forEach(n => {
-            const d = document
+            const d = document.createElement('div');
+            d.className = 'note-item';
+            d.innerHTML = `${n.text} <button class="note-delete">×</button>`;
+            d.querySelector('.note-delete').onclick = () => {
+                const updated = notes.filter(x => x.id !== n.id);
+                saveToStorage('eco_notes', updated);
+                this.renderNotes();
+            };
+            list.appendChild(d);
+            gsap.fromTo(d, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.39 });
+        });
+    }
+
+    initGallery(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = `
+            <div class="gallery-container">
+                <div class="gallery-header">Eco Gallery <button id="generateImageBtn">Generate Image</button></div>
+                <div id="galleryGrid" class="gallery-grid"></div>
+            </div>
+        `;
+        GALLERY_IMAGES.forEach((img, idx) => this.addGalleryItem(img.url, img.title, img.description, idx));
+        E('generateImageBtn').onclick = async () => {
+            const prompt = prompt('Enter prompt for AI image (e.g., "sustainable forest"):');
+            if (!prompt) return;
+            const url = await generateImage(prompt);
+            this.addGalleryItem(url, 'Generated Image', prompt, GALLERY_IMAGES.length);
+        };
+    }
+
+    addGalleryItem(url, title, desc, idx) {
+        const grid = E('galleryGrid');
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.innerHTML = `<img class="gallery-image" src="${url}" alt="${title}">`;
+        item.onclick = () => this.showImageModal(url, title, desc);
+        grid.appendChild(item);
+        gsap.fromTo(item, { opacity: 0, scale: 0.93 }, { opacity: 1, scale: 1, duration: 0.36, delay: idx * 0.1 });
+    }
+
+    showImageModal(url, title, desc) {
+        const modal = E('imageModal');
+        modal.classList.remove('hidden');
+        modal.querySelector('.modal-image').src = url;
+        modal.querySelector('.modal-title').textContent = title;
+        modal.querySelector('.modal-description').textContent = desc;
+        modal.querySelector('.modal-close').onclick = () => modal.classList.add('hidden');
+    }
+
+    async initNews(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = `<div class="news-container"><div class="news-header"><h3>Eco News</h3></div><div id="newsFeed" class="news-feed"></div></div>`;
+        const newsFeed = E('newsFeed');
+        try {
+            const resp = await fetch(`https://newsdata.io/api/1/news?country=in&language=en&category=environment,climate&apikey=${NEWS_API_KEY}`);
+            const data = await resp.json();
+            if (data && Array.isArray(data.results)) {
+                const arts = data.results.slice(0, 7).map(article => ({
+                    title: article.title || 'Untitled',
+                    summary: article.description ? article.description.slice(0, 170) + '...' : '',
+                    image: article.image_url || "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=400&q=80",
+                    date: article.pubDate ? new Date(article.pubDate) : new Date()
+                }));
+                arts.forEach(async (art, idx) => {
+                    art.summary = await callAI(`Summarize this eco article briefly: ${art.summary}`);
+                    const d = document.createElement('div');
+                    d.className = 'news-article';
+                    d.innerHTML = `
+                        <img class="news-image" src="${art.image}">
+                        <div class="news-content">
+                            <div class="news-title">${art.title}</div>
+                            <div class="news-summary">${art.summary}</div>
+                            <div class="news-date">${art.date.toLocaleDateString()}</div>
+                        </div>
+                    `;
+                    newsFeed.appendChild(d);
+                    gsap.fromTo(d, { opacity: 0, y: 30, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.38, delay: idx * 0.1 });
+                });
+            }
+        } catch (error) {}
+    }
+
+    initAIAdvisor(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = '<button id="generatePlan">Get Eco Plan</button><div id="plan"></div>';
+        E('generatePlan').onclick = async () => {
+            const plan = await callAI('Create a weekly sustainability plan for a student in India.');
+            E('plan').textContent = plan;
+        };
+    }
+
+    async initWeather(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = '<div id="weatherInfo"></div>';
+        try {
+            const resp = await fetch('https://api.openweathermap.org/data/2.5/weather?q=New%20Delhi&appid=YOUR_WEATHER_API_KEY&units=metric');
+            const data = await resp.json();
+            const tips = await callAI(`Eco tips for ${data.weather[0].main} weather in New Delhi.`);
+            E('weatherInfo').innerHTML = `<h3>${data.name}: ${data.main.temp}°C, ${data.weather[0].description}</h3><p>${tips}</p>`;
+        } catch (error) {
+            E('weatherInfo').textContent = 'Weather data unavailable.';
+        }
+    }
+
+    initTodo(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = '<input id="todoInput" placeholder="Add todo"><button id="addTodo">Add</button><div id="todoList"></div>';
+        const todos = loadFromStorage('eco_todos') || [];
+        todos.forEach(t => this.addTodoItem(t));
+        E('addTodo').onclick = async () => {
+            const txt = E('todoInput').value;
+            if (!txt) return;
+            const reminder = await callAI(`Generate a reminder for this eco todo: ${txt}`);
+            const todo = { text: txt, reminder };
+            todos.push(todo);
+            saveToStorage('eco_todos', todos);
+            this.addTodoItem(todo);
+            E('todoInput').value = '';
+        };
+    }
+
+    addTodoItem(todo) {
+        const list = E('todoList');
+        const item = document.createElement('div');
+        item.textContent = `${todo.text} - ${todo.reminder}`;
+        list.appendChild(item);
+    }
+
+    initSettings(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = '<h3>Settings</h3><button onclick="localStorage.clear(); location.reload();">Reset All Data</button>';
+    }
+
+    initAbout(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = '<h2>About EcoTrack OS</h2><p>Made by Tanuj Sharma and Sparsh Jain, Class 11, Lovely Public School.</p><p>© 2025</p>';
+    }
+
+    initDashboard(appId) {
+        const content = E(`${appId}-window`).querySelector('.window-content');
+        content.innerHTML = '<div class="dashboard-container"><div class="dashboard-stats"></div><div class="dashboard-charts"></div></div>';
+    }
+
+    hideLoadingScreen() {
+        setTimeout(() => {
+            gsap.to('#loadingScreen', { opacity: 0, duration: 0.5, onComplete: () => E('loadingScreen').style.display = 'none' });
+        }, 2000);
+    }
+
+    async showDailyEcoTip() {
+        const tip = await callAI('Generate a daily eco tip.');
+        this.showNotification(tip);
+    }
+
+    showNotification(message) {
+        const notif = document.createElement('div');
+        notif.className = 'notification';
+        notif.textContent = message;
+        E('notifications').appendChild(notif);
+        gsap.fromTo(notif, { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 });
+        setTimeout(() => notif.remove(), 5000);
+    }
+}
+
+const os = new EcoTrackOS();
+os.init();
+
+function setWallpaper() {
+    let idx = Math.floor(Math.random() * WALLPAPERS.length);
+    localStorage.setItem("eco_wallpaper_idx", idx);
+    E('wallpaper').style.backgroundImage = `url('${WALLPAPERS[idx]}')`;
+}
+window.addEventListener('DOMContentLoaded', setWallpaper);
+
+function updateDesktopClock() {
+    const clock = E('desktopClock');
+    function pad(n) { return n < 10 ? '0' + n : n; }
+    function animClock() {
+        const now = new Date();
+        clock.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        gsap.fromTo(clock, { scale: 0.97 }, { scale: 1, duration: 0.25, overwrite: 'auto' });
+    }
+    animClock();
+    setInterval(animClock, 1000);
+}
+window.addEventListener('DOMContentLoaded', updateDesktopClock);
+
+(function() {
+    const cc = E('customCursor');
+    window.addEventListener('mousemove', e => {
+        gsap.to(cc, { left: e.clientX, top: e.clientY, duration: 0.1, opacity: 1 });
+    });
+    window.addEventListener('mousedown', () => { gsap.to(cc, { scale: 0.8, duration: 0.1 }); });
+    window.addEventListener('mouseup', () => { gsap.to(cc, { scale: 1, duration: 0.13 }); });
+    window.addEventListener('mouseleave', () => { gsap.to(cc, { opacity: 0, duration: 0.2 }); });
+})();
