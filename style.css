@@ -35,6 +35,7 @@ display: flex;
 flex-wrap: wrap;
 padding: 24px;
 overflow: auto;
+z-index: 1;
 }
 
 .wallpaper {
@@ -44,19 +45,21 @@ background-size: cover;
 background-position: center;
 filter: brightness(0.95);
 transition: filter 0.3s ease;
+z-index: 0;
 }
 
 .desktop-icons {
 display: flex;
 flex-wrap: wrap;
 gap: 16px 20px;
-z-index: 1;
+z-index: 2;
 }
 
 .desktop-icon {
 width: 80px; height: 96px;
 display: flex; flex-direction: column; align-items: center;
 transition: transform 0.2s ease;
+z-index: 3;
 }
 
 .desktop-icon:hover {
@@ -126,6 +129,7 @@ background: white; border-radius: 28px;
 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 overflow: hidden;
 transition: all 0.3s ease;
+z-index: 1200;
 }
 
 .launcher-grid {
@@ -141,6 +145,7 @@ position: absolute;
 border-radius: 8px;
 box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 transition: all 0.3s ease;
+z-index: 100;
 }
 
 body.dark-mode .app-window {
@@ -178,6 +183,7 @@ background: #4caf50; color: white; padding: 10px; margin: 5px; border-radius: 5p
 
 .modal {
 position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
+z-index: 1500;
 }
 
 .modal-content {
@@ -382,6 +388,22 @@ flex-grow: 1; padding: 6px 14px 20px 14px;
 
 .loading-screen {
 position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: #d8f1dd; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;
+}
+
+.loading-content {
+text-align: center; color: #1fbe60;
+}
+
+.loading-logo {
+font-size: 48px; margin-bottom: 10px;
+}
+
+.loading-text {
+font-weight: 800; font-size: 22px; margin-bottom: 6px;
+}
+
+.loading-subtitle {
+font-weight: 600; opacity: 0.7; margin-bottom: 12px;
 }
 
 .loading-spinner {
