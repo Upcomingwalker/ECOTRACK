@@ -1,224 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>EcoTrack OS - Sustainability Desktop</title>
-<link rel="stylesheet" href="style.css" />
-<script defer src="app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack OS</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/Draggable.min.js"></script>
 </head>
 <body>
-  <div id="wallpaper" class="wallpaper"></div>
-  <div class="desktop-name">EcoTrack OS</div>
-  <div id="desktopClock" class="desktop-clock"></div>
-  <main class="desktop" tabindex="0" aria-label="Desktop workspace"></main>
-  <nav class="taskbar" role="navigation" aria-label="Taskbar">
-    <button id="launcherBtn" class="launcher-btn" aria-label="Open Apps Launcher" title="All Apps">
-      <div class="launcher-icon" aria-hidden="true">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      </div>
-    </button>
-    <div id="runningApps" class="running-apps" aria-live="polite" aria-atomic="true"></div>
-    <div class="system-tray" aria-label="System Tray">
-      <div id="trayTime" class="tray-time" aria-live="time">--:--:--</div>
+    <div id="customCursor"></div>
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Login to EcoTrack OS</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button id="loginBtn">Login</button>
+            <button id="registerBtn">Register</button>
+        </div>
     </div>
-  </nav>
-  <section id="appLauncher" class="app-launcher hidden" role="region" aria-label="All Apps Launcher">
-    <header class="launcher-header">
-      <input type="search" id="launcherSearch" class="launcher-search" placeholder="Search apps..." aria-label="Search apps" />
-    </header>
-    <div class="launcher-grid" role="list" aria-live="polite">
-      <button class="launcher-app" data-app="eco-calculator" role="listitem" aria-label="Eco Calculator App">
-        <span class="launcher-app-icon">🧮</span>
-        <span class="launcher-app-name">Eco Calculator</span>
-      </button>
-      <button class="launcher-app" data-app="ai-chatbot" role="listitem" aria-label="AI Chatbot App">
-        <span class="launcher-app-icon">🤖</span>
-        <span class="launcher-app-name">AI Chatbot</span>
-      </button>
-      <button class="launcher-app" data-app="impact-dashboard" role="listitem" aria-label="Impact Dashboard">
-        <span class="launcher-app-icon">📊</span>
-        <span class="launcher-app-name">Impact Dashboard</span>
-      </button>
-      <button class="launcher-app" data-app="news-feed" role="listitem" aria-label="News Feed App">
-        <span class="launcher-app-icon">📰</span>
-        <span class="launcher-app-name">News Feed</span>
-      </button>
-      <button class="launcher-app" data-app="notes" role="listitem" aria-label="Notes App">
-        <span class="launcher-app-icon">📝</span>
-        <span class="launcher-app-name">Notes</span>
-      </button>
-      <button class="launcher-app" data-app="media-gallery" role="listitem" aria-label="Media Gallery">
-        <span class="launcher-app-icon">🖼️</span>
-        <span class="launcher-app-name">Gallery</span>
-      </button>
-      <button class="launcher-app" data-app="about" role="listitem" aria-label="About EcoTrack OS">
-        <span class="launcher-app-icon">ℹ️</span>
-        <span class="launcher-app-name">About</span>
-      </button>
+    <div class="desktop">
+        <div id="wallpaper" class="wallpaper"></div>
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-app="eco-calculator"><span class="icon">🌿</span><span class="label">Calculator</span></div>
+            <div class="desktop-icon" data-app="ai-chatbot"><span class="icon">🤖</span><span class="label">EcoBot</span></div>
+            <div class="desktop-icon" data-app="impact-dashboard"><span class="icon">📊</span><span class="label">Dashboard</span></div>
+            <div class="desktop-icon" data-app="notes"><span class="icon">📝</span><span class="label">Notes</span></div>
+            <div class="desktop-icon" data-app="media-gallery"><span class="icon">🖼️</span><span class="label">Gallery</span></div>
+            <div class="desktop-icon" data-app="news-feed"><span class="icon">📰</span><span class="label">News</span></div>
+            <div class="desktop-icon" data-app="ai-advisor"><span class="icon">🧠</span><span class="label">AI Advisor</span></div>
+            <div class="desktop-icon" data-app="weather"><span class="icon">☁️</span><span class="label">Weather</span></div>
+            <div class="desktop-icon" data-app="todo"><span class="icon">✅</span><span class="label">Todo</span></div>
+            <div class="desktop-icon" data-app="settings"><span class="icon">⚙️</span><span class="label">Settings</span></div>
+            <div class="desktop-icon" data-app="about"><span class="icon">ℹ️</span><span class="label">About</span></div>
+        </div>
     </div>
-  </section>
-  <section id="eco-calculator-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Eco Calculator App Window" tabindex="-1">
-    <header class="window-header">
-      <span class="window-title"><span class="window-icon">🧮</span> Eco Calculator</span>
-      <nav class="window-controls">
-        <button class="window-btn minimize-btn" aria-label="Minimize Eco Calculator window" title="Minimize">−</button>
-        <button class="window-btn maximize-btn" aria-label="Maximize Eco Calculator window" title="Maximize">⬜</button>
-        <button class="window-btn close-btn" aria-label="Close Eco Calculator window" title="Close">✕</button>
-      </nav>
-    </header>
-    <section class="window-content eco-calculator-content">
-      <form id="ecoCalculatorForm" class="eco-calculator-form" aria-label="Carbon footprint calculator form">
-        <div class="form-group">
-          <label for="monthlyElectricity">Monthly Electricity (kWh):</label>
-          <input type="number" id="monthlyElectricity" class="form-control" min="0" required />
+    <div class="taskbar">
+        <div class="launcher-btn"><div class="launcher-icon"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+        <div class="running-apps"></div>
+        <div class="system-tray">
+            <button id="darkModeToggle" class="tray-icon">🌙</button>
+            <span class="tray-icon">📶</span>
+            <span class="tray-icon">🔋 100%</span>
+            <span id="desktopClock" class="tray-time"></span>
         </div>
-        <div class="form-group">
-          <label for="monthlyGas">Monthly Gas (therms):</label>
-          <input type="number" id="monthlyGas" class="form-control" min="0" required />
-        </div>
-        <div class="form-group">
-          <label for="monthlyTravelKm">Monthly Travel (km):</label>
-          <input type="number" id="monthlyTravelKm" class="form-control" min="0" required />
-        </div>
-        <button type="submit" class="calculate-btn" aria-label="Calculate carbon footprint">
-          Calculate
-          <span class="btn-loader hidden" aria-hidden="true"></span>
-        </button>
-      </form>
-      <div id="calculatorResults" class="calculator-results hidden" aria-live="polite" aria-atomic="true">
-        <div class="results-header">
-          <h4>Your Estimated CO2 Emissions:</h4>
-        </div>
-        <div class="co2-display">
-          <span id="co2Value" class="co2-value"></span>
-          <span class="co2-unit">tons/year</span>
-        </div>
-        <div id="ecoTips" class="eco-tips" aria-label="Eco tips to reduce emissions"></div>
-      </div>
-    </section>
-  </section>
-  <section id="ai-chatbot-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="AI Chatbot App Window" tabindex="-1">
-    <header class="window-header">
-      <span class="window-title"><span class="window-icon">🤖</span> AI Chatbot</span>
-      <nav class="window-controls">
-        <button class="window-btn minimize-btn" aria-label="Minimize AI Chatbot window" title="Minimize">−</button>
-        <button class="window-btn maximize-btn" aria-label="Maximize AI Chatbot window" title="Maximize">⬜</button>
-        <button class="window-btn close-btn" aria-label="Close AI Chatbot window" title="Close">✕</button>
-      </nav>
-    </header>
-    <section class="window-content chat-container">
-      <div id="chatMessages" class="chat-messages" aria-live="polite" aria-atomic="false"></div>
-      <div class="chat-input-container">
-        <input id="chatInput" type="text" class="chat-input" placeholder="Type a message..." aria-label="Chat input" autocomplete="off" />
-        <button id="chatSendBtn" class="chat-send-btn" aria-label="Send chat message">Send</button>
-      </div>
-    </section>
-  </section>
-  <section id="impact-dashboard-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Impact Dashboard App Window" tabindex="-1">
-    <header class="window-header">
-      <span class="window-title"><span class="window-icon">📊</span> Impact Dashboard</span>
-      <nav class="window-controls">
-        <button class="window-btn minimize-btn" aria-label="Minimize Impact Dashboard window" title="Minimize">−</button>
-        <button class="window-btn maximize-btn" aria-label="Maximize Impact Dashboard window" title="Maximize">⬜</button>
-        <button class="window-btn close-btn" aria-label="Close Impact Dashboard window" title="Close">✕</button>
-      </nav>
-    </header>
-    <section class="window-content dashboard-container" aria-live="polite" aria-label="Sustainability Impact Statistics">
-      <div class="dashboard-stats">
-        <div class="stat-card" id="statCO2" tabindex="0" aria-label="Total CO2 Saved">
-          <div class="stat-value">0</div>
-          <div class="stat-label">CO2 Saved (tons)</div>
-        </div>
-        <div class="stat-card" id="statTrees" tabindex="0" aria-label="Trees Planted">
-          <div class="stat-value">0</div>
-          <div class="stat-label">Trees Planted</div>
-        </div>
-        <div class="stat-card" id="statWater" tabindex="0" aria-label="Water Saved (liters)">
-          <div class="stat-value">0</div>
-          <div class="stat-label">Water Saved (L)</div>
-        </div>
-      </div>
-      <div class="dashboard-charts"></div>
-    </section>
-  </section>
-  <section id="news-feed-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="News Feed App Window" tabindex="-1">
-    <header class="window-header">
-      <span class="window-title"><span class="window-icon">📰</span> News Feed</span>
-      <nav class="window-controls">
-        <button class="window-btn minimize-btn" aria-label="Minimize News Feed window" title="Minimize">−</button>
-        <button class="window-btn maximize-btn" aria-label="Maximize News Feed window" title="Maximize">⬜</button>
-        <button class="window-btn close-btn" aria-label="Close News Feed window" title="Close">✕</button>
-      </nav>
-    </header>
-    <section class="window-content news-container" id="newsFeed" aria-live="polite" aria-label="Latest Environmental News"></section>
-  </section>
-  <section id="notes-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Notes App Window" tabindex="-1">
-    <header class="window-header">
-      <span class="window-title"><span class="window-icon">📝</span> Notes</span>
-      <nav class="window-controls">
-        <button class="window-btn minimize-btn" aria-label="Minimize Notes window" title="Minimize">−</button>
-        <button class="window-btn maximize-btn" aria-label="Maximize Notes window" title="Maximize">⬜</button>
-        <button class="window-btn close-btn" aria-label="Close Notes window" title="Close">✕</button>
-      </nav>
-    </header>
-    <section class="window-content notes-container">
-      <div class="notes-toolbar">
-        <button id="newNoteBtn" class="notes-btn" aria-label="Add a new note">New Note</button>
-      </div>
-      <div id="notesList" class="notes-list" aria-live="polite" aria-label="Notes list"></div>
-    </section>
-  </section>
-  <section id="media-gallery-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="Media Gallery App Window" tabindex="-1">
-    <header class="window-header">
-      <span class="window-title"><span class="window-icon">🖼️</span> Gallery</span>
-      <nav class="window-controls">
-        <button class="window-btn minimize-btn" aria-label="Minimize Gallery window" title="Minimize">−</button>
-        <button class="window-btn maximize-btn" aria-label="Maximize Gallery window" title="Maximize">⬜</button>
-        <button class="window-btn close-btn" aria-label="Close Gallery window" title="Close">✕</button>
-      </nav>
-    </header>
-    <section class="window-content gallery-container">
-      <h3 class="gallery-header">Sustainability Gallery</h3>
-      <div id="galleryGrid" class="gallery-grid" aria-live="polite" aria-label="Gallery images"></div>
-    </section>
-  </section>
-  <section id="about-window" class="app-window hidden" role="dialog" aria-modal="true" aria-label="About EcoTrack OS Window" tabindex="-1">
-    <header class="window-header">
-      <span class="window-title"><span class="window-icon">ℹ️</span> About EcoTrack OS</span>
-      <nav class="window-controls">
-        <button class="window-btn minimize-btn" aria-label="Minimize About window" title="Minimize">−</button>
-        <button class="window-btn maximize-btn" aria-label="Maximize About window" title="Maximize">⬜</button>
-        <button class="window-btn close-btn" aria-label="Close About window" title="Close">✕</button>
-      </nav>
-    </header>
-    <section class="window-content about-container">
-      <h2>EcoTrack OS</h2>
-      <p>EcoTrack OS is a sustainability-focused desktop simulation environment designed for learning about environmental impact and eco-friendly living.</p>
-      <p>Features include:</p>
-      <ul>
-        <li>Carbon footprint calculator</li>
-        <li>AI chatbot for eco advice</li>
-        <li>Impact Dashboard</li>
-        <li>Latest environmental news</li>
-        <li>Personal notes with storage</li>
-        <li>Image gallery related to sustainability</li>
-      </ul>
-      <hr />
-      <p>Made with care by <strong>Tanuj Sharma</strong> and <strong>Sparsh Jain</strong> of Class 11, Lovely Public School.</p>
-      <p>© 2025 Tanuj Sharma &amp; Sparsh Jain, Lovely Public School</p>
-    </section>
-  </section>
-  <div id="customCursor" aria-hidden="true"></div>
-  <div id="loadingScreen" class="loading-screen" aria-label="Loading">
-    <div class="loading-content">
-      <div class="loading-logo" aria-hidden="true">🌿</div>
-      <div class="loading-text">EcoTrack OS</div>
-      <div class="loading-subtitle">Loading sustainability apps…</div>
-      <div class="loading-spinner" aria-hidden="true"></div>
     </div>
-  </div>
+    <div id="appLauncher" class="app-launcher hidden">
+        <div class="launcher-header">
+            <input type="text" class="launcher-search" placeholder="Search apps...">
+        </div>
+        <div class="launcher-grid"></div>
+    </div>
+    <div id="loadingScreen" class="loading-screen"></div>
+    <div id="notifications" class="notifications"></div>
+    <div id="eco-calculator-window" class="app-window hidden">
+        <div class="window-header">
+            <div class="window-title"><span class="window-icon">🌿</span>Eco Calculator</div>
+            <div class="window-controls">
+                <button class="window-btn minimize-btn">-</button>
+                <button class="window-btn maximize-btn">□</button>
+                <button class="window-btn close-btn">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <form id="ecoCalculatorForm" class="eco-calculator-form">
+                <button type="submit" class="calculate-btn">Calculate</button>
+            </form>
+            <div id="calculatorResults" class="calculator-results hidden"></div>
+        </div>
+        <div class="resize-handle"></div>
+    </div>
+    <div id="imageModal" class="image-modal hidden">
+        <div class="modal-content">
+            <button class="modal-close">×</button>
+            <img class="modal-image" src="" alt="">
+            <div class="modal-info">
+                <h3 class="modal-title"></h3>
+                <p class="modal-description"></p>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
