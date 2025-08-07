@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="resources/lps.png">
+    <title>Environmental Weather Forecast</title>
+    <link rel="stylesheet" href="app-data/weather/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>🌿 EcoWeather</h1>
+            </div>
+            <div class="search-container">
+                <input type="text" id="locationInput" placeholder="Search location..." />
+                <button id="searchBtn">🔍</button>
+            </div>
+            <div class="unit-toggle">
+                <button id="unitToggle">°C</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="current-weather">
+                <div class="location">
+                    <h2 id="currentLocation">Getting location...</h2>
+                </div>
+                <div class="weather-info">
+                    <div class="temperature">
+                        <span id="currentTemp">--°</span>
+                    </div>
+                    <div class="weather-details">
+                        <img id="weatherIcon" src="" alt="Weather icon" />
+                        <p id="weatherDescription">Loading...</p>
+                        <div class="additional-info">
+                            <span id="feelsLike">Feels like --°</span>
+                            <span id="humidity">Humidity: --%</span>
+                            <span id="windSpeed">Wind: -- km/h</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="forecast-container">
+                <h3>5-Day Forecast</h3>
+                <div class="forecast-grid" id="forecastGrid">
+                    <!-- Forecast cards will be dynamically generated -->
+                </div>
+            </div>
+
+            <div class="hourly-forecast">
+                <h3>Today's Hourly Forecast</h3>
+                <div class="hourly-grid" id="hourlyGrid">
+                    <!-- Hourly forecast will be dynamically generated -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app-data/weather/script.js"></script>
+</body>
+</html>

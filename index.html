@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="resources/lps.png">
+    <title>EcoTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="loader-wrapper" id="loaderWrapper">
+      <span class="loader-letter">E</span>
+      <span class="loader-letter">C</span>
+      <span class="loader-letter">O</span>
+      <span class="loader-letter">-</span>
+      <span class="loader-letter">T</span>
+      <span class="loader-letter">R</span>
+      <span class="loader-letter">A</span>
+      <span class="loader-letter">C</span>
+      <span class="loader-letter">K</span>
+      <div class="loader"></div>
+    </div>
+
+    <div class="main-wrapper" style="display: none;">
+        <video class="video-background" autoplay muted loop>
+            <source src="resources/bg.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+        
+        <div class="sidebar">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-switch" class="theme-switch">
+                <label for="theme-switch" class="theme-label">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                    <div class="toggle-slider"></div>
+                </label>
+            </div>
+            
+            <div class="logo-container">
+                <img src="resources/LPS.png" alt="School Logo" class="school-logo">
+            </div>
+            
+            <div class="system-info">
+                <div class="app-version">EcoTrack v1.0</div>
+                <div class="live-time" id="liveTime">12:00 PM</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="app-carousel-container">
+                <div class="app-carousel" id="appCarousel">
+                    <div class="app-card" data-app="ai">
+                        <div class="app-image">
+                            <img src="resources/logo/AI.png" alt="FLAT AI">
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-app="carbon">
+                        <div class="app-image">
+                            <img src="resources/logo/carbon.png" alt="Carbon Calculator">
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-app="chat">
+                        <div class="app-image">
+                            <img src="resources/logo/chats.png" alt="Firebase Chats">
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-app="news">
+                        <div class="app-image">
+                            <img src="resources/logo/news.png" alt="NEWS">
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-app="notes">
+                        <div class="app-image">
+                            <img src="resources/logo/notes.png" alt="Notes">
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-app="Weather">
+                        <div class="app-image">
+                            <img src="resources/logo/weather.png" alt="Weather">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="description-panel">
+                <div class="description-content" id="descriptionContent">
+                    <h3>Track your carbon footprint and make a difference!</h3>
+                    <p>Monitor your daily activities and discover eco-friendly alternatives to reduce your environmental impact.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

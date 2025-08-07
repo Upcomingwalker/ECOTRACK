@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="resources/lps.png">
+    <title>Carbon Calculator</title>
+    <link rel="stylesheet" href="app-data/carbon/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🌱 Carbon Calculator</h1>
+                </div>
+                <div class="header-controls">
+                    <button class="theme-toggle btn btn--secondary" aria-label="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Welcome Dashboard -->
+            <section class="dashboard">
+                <div class="welcome-card card">
+                    <div class="card__body">
+                        <h2>Welcome to Your Carbon Footprint Calculator</h2>
+                        <p>Track, analyze, and reduce your environmental impact with our comprehensive calculator.</p>
+                        <div class="footprint-summary">
+                            <div class="current-footprint">
+                                <span class="footprint-value">0.0</span>
+                                <span class="footprint-unit">tons CO₂/year</span>
+                            </div>
+                            <div class="comparison-bars">
+                                <div class="comparison-item">
+                                    <span class="comparison-label">Your footprint</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" data-progress="0"></div>
+                                    </div>
+                                    <span class="comparison-value">0.0</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span class="comparison-label">US Average</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" data-progress="100"></div>
+                                    </div>
+                                    <span class="comparison-value">16.0</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span class="comparison-label">2050 Target</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill target" data-progress="12.5"></div>
+                                    </div>
+                                    <span class="comparison-value">2.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Navigation -->
+                <div class="category-nav">
+                    <button class="category-tab active" data-category="energy">
+                        <span class="category-icon">🏠</span>
+                        <span class="category-name">Home Energy</span>
+                    </button>
+                    <button class="category-tab" data-category="transport">
+                        <span class="category-icon">🚗</span>
+                        <span class="category-name">Transportation</span>
+                    </button>
+                    <button class="category-tab" data-category="waste">
+                        <span class="category-icon">♻️</span>
+                        <span class="category-name">Waste</span>
+                    </button>
+                    <button class="category-tab" data-category="diet">
+                        <span class="category-icon">🍽️</span>
+                        <span class="category-name">Diet</span>
+                    </button>
+                    <button class="category-tab" data-category="travel">
+                        <span class="category-icon">✈️</span>
+                        <span class="category-name">Air Travel</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Input Sections -->
+            <section class="input-sections">
+                <!-- Home Energy -->
+                <div class="input-card card active" data-section="energy">
+                    <div class="card__body">
+                        <h3>🏠 Home Energy</h3>
+                        <p>Track electricity, gas, and heating consumption</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Monthly Electricity Bill ($)</label>
+                                <input type="number" class="form-control" id="electricity-bill" placeholder="150">
+                                <small class="form-hint">Average US household: $120-150/month</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Energy Source</label>
+                                <select class="form-control" id="energy-source">
+                                    <option value="us_average">US Average Mix</option>
+                                    <option value="coal">Coal</option>
+                                    <option value="natural_gas">Natural Gas</option>
+                                    <option value="renewable">Renewable Energy</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Monthly Gas Bill ($)</label>
+                                <input type="number" class="form-control" id="gas-bill" placeholder="80">
+                                <small class="form-hint">For heating and cooking</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Home Size (sq ft)</label>
+                                <input type="number" class="form-control" id="home-size" placeholder="2000">
+                                <small class="form-hint">Used for energy efficiency calculation</small>
+                            </div>
+                        </div>
+                        <div class="category-result">
+                            <span class="result-label">Energy Emissions:</span>
+                            <span class="result-value" id="energy-emissions">0.0 tons CO₂/year</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transportation -->
+                <div class="input-card card" data-section="transport">
+                    <div class="card__body">
+                        <h3>🚗 Transportation</h3>
+                        <p>Vehicle usage, public transit, and commuting</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Annual Miles Driven</label>
+                                <input type="number" class="form-control" id="miles-driven" placeholder="12000">
+                                <small class="form-hint">US average: 12,000 miles/year</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Fuel Efficiency (MPG)</label>
+                                <input type="number" class="form-control" id="vehicle-mpg" placeholder="25">
+                                <small class="form-hint">US average: 25 MPG</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Fuel Type</label>
+                                <select class="form-control" id="fuel-type">
+                                    <option value="gasoline">Gasoline</option>
+                                    <option value="diesel">Diesel</option>
+                                    <option value="electric">Electric</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Public Transport Miles/Month</label>
+                                <input type="number" class="form-control" id="public-transport" placeholder="100">
+                                <small class="form-hint">Bus, train, subway usage</small>
+                            </div>
+                        </div>
+                        <div class="category-result">
+                            <span class="result-label">Transport Emissions:</span>
+                            <span class="result-value" id="transport-emissions">0.0 tons CO₂/year</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waste -->
+                <div class="input-card card" data-section="waste">
+                    <div class="card__body">
+                        <h3>♻️ Waste</h3>
+                        <p>Recycling habits and waste production</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Weekly Trash Bags</label>
+                                <input type="number" class="form-control" id="trash-bags" placeholder="3">
+                                <small class="form-hint">Number of bags sent to landfill</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Recycling Level</label>
+                                <select class="form-control" id="recycling-level">
+                                    <option value="0">No recycling</option>
+                                    <option value="0.3">Some recycling</option>
+                                    <option value="0.7">Most items recycled</option>
+                                    <option value="1">Everything recycled</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Composting</label>
+                                <select class="form-control" id="composting">
+                                    <option value="0">No composting</option>
+                                    <option value="0.5">Some food waste composted</option>
+                                    <option value="1">All organic waste composted</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="category-result">
+                            <span class="result-label">Waste Emissions:</span>
+                            <span class="result-value" id="waste-emissions">0.0 tons CO₂/year</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diet -->
+                <div class="input-card card" data-section="diet">
+                    <div class="card__body">
+                        <h3>🍽️ Diet</h3>
+                        <p>Food choices and dietary impact</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Beef Meals per Week</label>
+                                <input type="number" class="form-control" id="beef-meals" placeholder="3">
+                                <small class="form-hint">Red meat has highest carbon impact</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Chicken/Pork Meals per Week</label>
+                                <input type="number" class="form-control" id="poultry-meals" placeholder="4">
+                                <small class="form-hint">Chicken and pork consumption</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Fish Meals per Week</label>
+                                <input type="number" class="form-control" id="fish-meals" placeholder="2">
+                                <small class="form-hint">Seafood consumption</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Dairy Servings per Day</label>
+                                <input type="number" class="form-control" id="dairy-servings" placeholder="3">
+                                <small class="form-hint">Milk, cheese, yogurt, etc.</small>
+                            </div>
+                        </div>
+                        <div class="category-result">
+                            <span class="result-label">Diet Emissions:</span>
+                            <span class="result-value" id="diet-emissions">0.0 tons CO₂/year</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Air Travel -->
+                <div class="input-card card" data-section="travel">
+                    <div class="card__body">
+                        <h3>✈️ Air Travel</h3>
+                        <p>Flight emissions and travel impact</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Short Flights per Year</label>
+                                <input type="number" class="form-control" id="short-flights" placeholder="2">
+                                <small class="form-hint">Under 3 hours (domestic)</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Long Flights per Year</label>
+                                <input type="number" class="form-control" id="long-flights" placeholder="1">
+                                <small class="form-hint">Over 3 hours (domestic)</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">International Flights per Year</label>
+                                <input type="number" class="form-control" id="international-flights" placeholder="0">
+                                <small class="form-hint">Intercontinental travel</small>
+                            </div>
+                        </div>
+                        <div class="category-result">
+                            <span class="result-label">Travel Emissions:</span>
+                            <span class="result-value" id="travel-emissions">0.0 tons CO₂/year</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section">
+                <div class="results-card card">
+                    <div class="card__body">
+                        <h3>Your Carbon Footprint Results</h3>
+                        <div class="results-grid">
+                            <div class="total-footprint">
+                                <div class="total-value">
+                                    <span class="total-number" id="total-footprint">0.0</span>
+                                    <span class="total-unit">tons CO₂/year</span>
+                                </div>
+                                <div class="total-status" id="footprint-status">Calculate your impact to see results</div>
+                            </div>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="footprint-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="recommendations-card card">
+                    <div class="card__body">
+                        <h3>🌟 Personalized Recommendations</h3>
+                        <div class="recommendations-grid" id="recommendations">
+                            <!-- Recommendations will be populated by JavaScript -->
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn--primary" id="export-btn">📊 Export Report</button>
+                            <button class="btn btn--secondary" id="reset-btn">🔄 Reset Calculator</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Help Modal -->
+    <div class="modal hidden" id="help-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>How to Use Carbon Calculator</h3>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h4>🏠 Home Energy</h4>
+                    <p>Enter your monthly utility bills and home details. The calculator uses national averages to estimate your energy consumption and emissions.</p>
+                </div>
+                <div class="help-section">
+                    <h4>🚗 Transportation</h4>
+                    <p>Include all vehicle usage, including personal cars and public transportation. Fuel efficiency greatly impacts emissions.</p>
+                </div>
+                <div class="help-section">
+                    <h4>♻️ Waste</h4>
+                    <p>Recycling and composting significantly reduce emissions. Each recycled item prevents landfill methane emissions.</p>
+                </div>
+                <div class="help-section">
+                    <h4>🍽️ Diet</h4>
+                    <p>Food production varies greatly in carbon impact. Red meat has the highest footprint, while plant-based foods have the lowest.</p>
+                </div>
+                <div class="help-section">
+                    <h4>✈️ Air Travel</h4>
+                    <p>Flying has a very high carbon impact per mile. Consider the frequency and distance of your flights.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app-data/carbon/script.js"></script>
+</body>
+</html>

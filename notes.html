@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="resources/lps.png">
+    <title>EcoNotes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="app-data/notes/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="app-logo">
+                    <div class="logo-icon">🌱</div>
+                    <h1 class="app-title">EcoNotes</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search notes and todos...">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="app-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="notes" id="notesTab">
+                    <span class="tab-icon">📝</span>
+                    Notes
+                </button>
+                <button class="nav-tab" data-tab="todos" id="todosTab">
+                    <span class="tab-icon">✅</span>
+                    Todos
+                </button>
+            </div>
+            <button class="add-btn" id="addBtn">
+                <span class="add-icon">+</span>
+                <span class="add-text">Add New</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Notes Section -->
+            <section class="content-section active" id="notesSection">
+                <div class="section-header">
+                    <h2 class="section-title">📝 Your Notes</h2>
+                    <div class="section-stats">
+                        <span class="stats-text" id="notesStats">0 notes</span>
+                    </div>
+                </div>
+                
+                <div class="empty-state" id="notesEmpty">
+                    <div class="empty-icon">🌿</div>
+                    <h3>Start your sustainable note-taking journey</h3>
+                    <p>Create your first note and help save the planet by going paperless!</p>
+                    <button class="btn btn--primary" onclick="showNoteModal()">Create First Note</button>
+                </div>
+                
+                <div class="notes-grid" id="notesGrid"></div>
+            </section>
+
+            <!-- Todos Section -->
+            <section class="content-section" id="todosSection">
+                <div class="section-header">
+                    <h2 class="section-title">✅ Your Todos</h2>
+                    <div class="section-stats">
+                        <span class="stats-text" id="todosStats">0 todos</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="todoProgress"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="empty-state" id="todosEmpty">
+                    <div class="empty-icon">🎯</div>
+                    <h3>Organize your eco-friendly tasks</h3>
+                    <p>Create your first todo and stay organized while being environmentally conscious!</p>
+                    <button class="btn btn--primary" onclick="showTodoModal()">Create First Todo</button>
+                </div>
+                
+                <div class="todos-list" id="todosList"></div>
+            </section>
+        </main>
+
+        <!-- Note Modal -->
+        <div class="modal hidden" id="noteModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="noteModalTitle">Create New Note</h3>
+                    <button class="modal-close" onclick="closeModal('noteModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="noteTitle" class="form-label">Note Title</label>
+                        <input type="text" id="noteTitle" class="form-control" placeholder="Enter note title...">
+                    </div>
+                    <div class="form-group">
+                        <label for="noteContent" class="form-label">Note Content</label>
+                        <textarea id="noteContent" class="form-control" rows="8" placeholder="Write your note here..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--outline" onclick="closeModal('noteModal')">Cancel</button>
+                    <button class="btn btn--primary" id="saveNoteBtn" onclick="saveNote()">Save Note</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Todo Modal -->
+        <div class="modal hidden" id="todoModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="todoModalTitle">Create New Todo</h3>
+                    <button class="modal-close" onclick="closeModal('todoModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="todoTitle" class="form-label">Todo Title</label>
+                        <input type="text" id="todoTitle" class="form-control" placeholder="Enter todo title...">
+                    </div>
+                    <div class="form-group">
+                        <label for="todoCategory" class="form-label">Category</label>
+                        <select id="todoCategory" class="form-control">
+                            <option value="personal">🏠 Personal</option>
+                            <option value="work">💼 Work</option>
+                            <option value="eco">🌱 Eco-Friendly</option>
+                            <option value="health">💚 Health</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="todoDueDate" class="form-label">Due Date (Optional)</label>
+                        <input type="date" id="todoDueDate" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--outline" onclick="closeModal('todoModal')">Cancel</button>
+                    <button class="btn btn--primary" id="saveTodoBtn" onclick="saveTodo()">Save Todo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal hidden" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Settings</h3>
+                    <button class="modal-close" onclick="closeModal('settingsModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h4>Data Management</h4>
+                        <p class="settings-note">⚠️ Note: Due to technical limitations, data is only stored during your current session and will not persist after closing the browser.</p>
+                        <div class="settings-actions">
+                            <button class="btn btn--outline" onclick="exportData()">Export Data</button>
+                            <button class="btn btn--outline" onclick="clearAllData()">Clear All Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <span class="footer-text">🌱 EcoNotes - Sustainable Digital Organization</span>
+                <button class="settings-btn" onclick="openModal('settingsModal')">⚙️ Settings</button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app-data/notes/script.js"></script>
+</body>
+</html>
