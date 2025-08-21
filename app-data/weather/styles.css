@@ -18,8 +18,9 @@
 }
 
 html, body {
-    height: 100vh;
+    min-height: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body {
@@ -32,13 +33,11 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
 
-/* Header Styles - Fixed Height */
 .header {
     display: flex;
     justify-content: space-between;
@@ -90,28 +89,20 @@ body {
     transform: translateY(-2px);
 }
 
-/* Main Content - Scrollable */
 .main-content {
     flex: 1;
-    overflow-y: auto;
     display: grid;
     grid-template-rows: auto auto auto;
     gap: 20px;
     padding-right: 10px;
 }
 
-/* Current Weather - Fixed Height */
 .current-weather {
     background: var(--cloud-white);
     padding: 25px;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     text-align: center;
-    min-height: 200px;
-    max-height: 250px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 #currentLocation {
@@ -165,21 +156,11 @@ body {
     font-size: 0.9rem;
 }
 
-/* Forecast Styles - Fixed Heights */
 .forecast-container, .hourly-forecast {
     background: var(--cloud-white);
     padding: 20px;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    overflow: hidden;
-}
-
-.forecast-container {
-    max-height: 280px;
-}
-
-.hourly-forecast {
-    max-height: 200px;
 }
 
 .forecast-container h3, .hourly-forecast h3 {
@@ -193,7 +174,6 @@ body {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 15px;
-    overflow: hidden;
 }
 
 .forecast-card {
@@ -203,10 +183,10 @@ body {
     text-align: center;
     border: 2px solid var(--secondary-green);
     transition: transform 0.3s ease;
-    min-height: 180px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-height: 180px;
 }
 
 .forecast-card:hover {
@@ -248,7 +228,7 @@ body {
     gap: 15px;
     overflow-x: auto;
     padding: 10px 0;
-    max-height: 140px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .hourly-grid::-webkit-scrollbar {
@@ -295,7 +275,6 @@ body {
     color: var(--text-light);
 }
 
-/* Custom Scrollbar for Main Content */
 .main-content::-webkit-scrollbar {
     width: 8px;
 }
@@ -314,7 +293,6 @@ body {
     background: var(--primary-green);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
@@ -373,30 +351,21 @@ body {
         width: 25px;
         height: 25px;
     }
-
-    .current-weather {
-        max-height: 220px;
-        padding: 20px;
-    }
-
-    .forecast-container {
-        max-height: 350px;
-    }
 }
 
 @media (max-width: 480px) {
     .forecast-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .weather-info {
         gap: 10px;
     }
-    
+
     .temperature {
         font-size: 2rem;
     }
-    
+
     #currentLocation {
         font-size: 1.1rem;
     }
