@@ -37,7 +37,8 @@
 
     <!-- Main content -->
     <main class="main">
-      <!-- Top: Score card -->
+
+      <!-- Top: Score + Buddy -->
       <section class="top">
         <div class="score-card">
           <div class="ring-wrap">
@@ -55,12 +56,12 @@
               <div class="score-value" id="carbonScore">0 kg</div>
               <div class="score-sub">Carbon Saved</div>
             </div>
-            <div class="sparkles" aria-hidden></div>
+            <div class="sparkles"></div>
           </div>
 
           <div class="xp-panel">
             <div class="xp-bar">
-              <div class="xp-fill" id="xpFill" style="width:0%"></div>
+              <div class="xp-fill" id="xpFill"></div>
             </div>
             <div class="xp-info">
               <div id="xpText">0 / 100 XP</div>
@@ -72,44 +73,75 @@
         <div class="buddy-card">
           <div class="buddy">
             <div class="buddy-face" id="buddyFace">🌍</div>
-            <div class="buddy-eyes"></div>
-            <div class="buddy-mouth"></div>
             <div class="buddy-speech" id="buddySpeech">Let's earn Earth Points!</div>
           </div>
+
           <div class="quick-actions">
             <button class="action" data-action="log-bike">🚴 Bike (+2 kg)</button>
             <button class="action" data-action="log-recycle">♻️ Recycle (+1 kg)</button>
-            <button class="action" data-action="log-meat">🥩 Skip Meat (-3 kg saved)</button>
+            <button class="action" data-action="log-meat">🥩 Skip Meat (+3 kg)</button>
           </div>
         </div>
       </section>
 
-      <!-- Middle: Missions -->
-      <section class="content" id="contentArea">
-        <h2 class="section-title">Daily Missions</h2>
-        <div class="missions-grid" id="missionsGrid">
-          <!-- JS populates missions -->
-        </div>
+      <!-- Secondary App Panel -->
+      <section class="app-panel">
+        <h2 class="section-title">Apps</h2>
+        <div class="app-grid">
 
-        <h2 class="section-title">Recent Activity</h2>
-        <ul class="activity-list" id="activityList">
-          <!-- JS activity -->
-        </ul>
+          <div class="app-item" data-app="ai">
+            <img src="resources/logo/AI.png">
+            <span>AI</span>
+          </div>
+
+          <div class="app-item" data-app="carbon">
+            <img src="resources/logo/carbon.png">
+            <span>Carbon</span>
+          </div>
+
+          <div class="app-item" data-app="chat">
+            <img src="resources/logo/chats.png">
+            <span>Chats</span>
+          </div>
+
+          <div class="app-item" data-app="news">
+            <img src="resources/logo/news.png">
+            <span>News</span>
+          </div>
+
+          <div class="app-item" data-app="notes">
+            <img src="resources/logo/notes.png">
+            <span>Notes</span>
+          </div>
+
+          <div class="app-item" data-app="weather">
+            <img src="resources/logo/weather.png">
+            <span>Weather</span>
+          </div>
+
+        </div>
       </section>
 
-      <!-- Right column: Badges & Leaderboard -->
+      <!-- Missions & Activity -->
+      <section class="content" id="contentArea">
+        <h2 class="section-title">Daily Missions</h2>
+        <div class="missions-grid" id="missionsGrid"></div>
+
+        <h2 class="section-title">Recent Activity</h2>
+        <ul class="activity-list" id="activityList"></ul>
+      </section>
+
+      <!-- Right Sidebar -->
       <aside class="right-col">
         <div class="badges-panel">
           <h3>Badges</h3>
-          <div class="badges" id="badgesArea">
-            <!-- badges -->
-          </div>
+          <div class="badges" id="badgesArea"></div>
         </div>
 
         <div class="leaderboard">
           <h3>Leaderboard</h3>
           <ol id="leaderboardList">
-            <li><strong>You</strong> — <span class="lb-score" id="lbYou">0</span> pts</li>
+            <li><strong>You</strong> — <span id="lbYou">0</span> pts</li>
             <li>Player2 — 320 pts</li>
             <li>PlanetPal — 270 pts</li>
           </ol>
@@ -118,11 +150,10 @@
     </main>
   </div>
 
+  <!-- Mission Template -->
   <template id="missionTpl">
     <div class="mission-card">
-      <div class="mission-left">
-        <div class="mission-emoji">🚲</div>
-      </div>
+      <div class="mission-left"><div class="mission-emoji">🚲</div></div>
       <div class="mission-middle">
         <div class="mission-title">Ride a bike</div>
         <div class="mission-desc">Short trip under 5km</div>
