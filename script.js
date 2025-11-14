@@ -245,7 +245,7 @@ document.querySelectorAll('.action').forEach(btn=>{
   });
 });
 
-// NAVIGATION
+// NAVIGATION BUTTONS
 document.querySelectorAll('.nav-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -265,11 +265,26 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
   });
 });
 
-// MAKE APPS CLICKABLE
+// OPEN APPS FROM DASHBOARD
+const appRoutes = {
+  ai: "ai.html",
+  carbon: "carbon.html",
+  chat: "chats.html",
+  news: "news.html",
+  notes: "notes.html",
+  weather: "weather.html"
+};
+
 document.querySelectorAll('.app-item').forEach(app => {
   app.addEventListener('click', () => {
     const appName = app.dataset.app;
-    alert(`Opening ${appName}...`);
+    const target = appRoutes[appName];
+
+    if(target){
+      window.location.href = target;
+    } else {
+      alert("This app is not linked yet.");
+    }
   });
 });
 
