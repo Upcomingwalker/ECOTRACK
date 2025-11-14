@@ -1,73 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoTrack – Switch UI</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EcoTrack — Carbon Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="app">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="joycon-left"></div>
+        <div class="screen-badge">EcoTrack</div>
+        <div class="joycon-right"></div>
+      </div>
 
-<div class="switch-wrapper">
+      <div class="profile">
+        <div class="avatar">🌱</div>
+        <div class="username">Player</div>
+        <div class="lvl" id="userLevel">Lvl 1</div>
+      </div>
 
-    <!-- LEFT SWITCH BAR -->
-    <aside class="switch-sidebar">
-        <div class="user-avatar"></div>
+      <nav class="nav">
+        <button class="nav-btn active" data-tab="home">🏠 Home</button>
+        <button class="nav-btn" data-tab="missions">🎯 Missions</button>
+        <button class="nav-btn" data-tab="badges">🏅 Badges</button>
+        <button class="nav-btn" data-tab="stats">📊 Stats</button>
+      </nav>
 
-        <nav class="menu-icons">
-            <div class="menu-item active" data-tab="home">🏠</div>
-            <div class="menu-item" data-tab="apps">🎮</div>
-            <div class="menu-item" data-tab="shop">🛒</div>
-            <div class="menu-item" data-tab="settings">⚙️</div>
-        </nav>
-
-        <div class="time" id="liveTime">--:--</div>
+      <div class="sidebar-footer">
+        <small>Carbon Quest • Be a Messiah for Clean Air</small>
+      </div>
     </aside>
 
-    <!-- MAIN SECTION -->
-    <main class="switch-main">
-
-        <h1 class="main-title">EcoTrack</h1>
-
-        <section class="game-row">
-
-            <div class="game-card big">
-                <img src="resources/logo/carbon.png">
-                <span>Carbon Tracker</span>
+    <!-- Main content -->
+    <main class="main">
+      <!-- Top: Score card -->
+      <section class="top">
+        <div class="score-card">
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 120 120" aria-hidden>
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1">
+                  <stop offset="0" stop-color="#9AE6B4"/>
+                  <stop offset="1" stop-color="#34D399"/>
+                </linearGradient>
+              </defs>
+              <circle class="ring-bg" cx="60" cy="60" r="48"></circle>
+              <circle class="ring-fill" cx="60" cy="60" r="48" stroke="url(#g1)"></circle>
+            </svg>
+            <div class="score-inner">
+              <div class="score-value" id="carbonScore">0 kg</div>
+              <div class="score-sub">Carbon Saved</div>
             </div>
+            <div class="sparkles" aria-hidden></div>
+          </div>
 
-            <div class="game-card">
-                <img src="resources/logo/AI.png">
-                <span>AI Assistant</span>
+          <div class="xp-panel">
+            <div class="xp-bar">
+              <div class="xp-fill" id="xpFill" style="width:0%"></div>
             </div>
-
-            <div class="game-card">
-                <img src="resources/logo/chats.png">
-                <span>Chats</span>
+            <div class="xp-info">
+              <div id="xpText">0 / 100 XP</div>
+              <div class="next-goal">Next Level: <span id="nextGoal">100 XP</span></div>
             </div>
+          </div>
+        </div>
 
-            <div class="game-card">
-                <img src="resources/logo/news.png">
-                <span>News</span>
-            </div>
+        <div class="buddy-card">
+          <div class="buddy">
+            <div class="buddy-face" id="buddyFace">🌍</div>
+            <div class="buddy-eyes"></div>
+            <div class="buddy-mouth"></div>
+            <div class="buddy-speech" id="buddySpeech">Let's earn Earth Points!</div>
+          </div>
+          <div class="quick-actions">
+            <button class="action" data-action="log-bike">🚴 Bike (+2 kg)</button>
+            <button class="action" data-action="log-recycle">♻️ Recycle (+1 kg)</button>
+            <button class="action" data-action="log-meat">🥩 Skip Meat (-3 kg saved)</button>
+          </div>
+        </div>
+      </section>
 
-            <div class="game-card">
-                <img src="resources/logo/notes.png">
-                <span>Notes</span>
-            </div>
+      <!-- Middle: Missions -->
+      <section class="content" id="contentArea">
+        <h2 class="section-title">Daily Missions</h2>
+        <div class="missions-grid" id="missionsGrid">
+          <!-- JS populates missions -->
+        </div>
 
-            <div class="game-card">
-                <img src="resources/logo/weather.png">
-                <span>Weather</span>
-            </div>
+        <h2 class="section-title">Recent Activity</h2>
+        <ul class="activity-list" id="activityList">
+          <!-- JS activity -->
+        </ul>
+      </section>
 
-        </section>
+      <!-- Right column: Badges & Leaderboard -->
+      <aside class="right-col">
+        <div class="badges-panel">
+          <h3>Badges</h3>
+          <div class="badges" id="badgesArea">
+            <!-- badges -->
+          </div>
+        </div>
 
+        <div class="leaderboard">
+          <h3>Leaderboard</h3>
+          <ol id="leaderboardList">
+            <li><strong>You</strong> — <span class="lb-score" id="lbYou">0</span> pts</li>
+            <li>Player2 — 320 pts</li>
+            <li>PlanetPal — 270 pts</li>
+          </ol>
+        </div>
+      </aside>
     </main>
+  </div>
 
-</div>
+  <template id="missionTpl">
+    <div class="mission-card">
+      <div class="mission-left">
+        <div class="mission-emoji">🚲</div>
+      </div>
+      <div class="mission-middle">
+        <div class="mission-title">Ride a bike</div>
+        <div class="mission-desc">Short trip under 5km</div>
+      </div>
+      <div class="mission-right">
+        <div class="mission-reward">+2 kg</div>
+        <button class="btn-do">Do</button>
+      </div>
+    </div>
+  </template>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
