@@ -1,163 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EcoTrack — Carbon Quest (One-View Parallax)</title>
+  <title>EcoTrack — Carbon Quest (Switch UI)</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="stage">
-    <!-- Parallax Background Layers -->
-    <div id="parallax">
-      <div class="layer layer-back" data-depth="0.08"></div>
-      <div class="layer layer-mid" data-depth="0.18"></div>
-      <div class="layer layer-front" data-depth="0.35"></div>
-      <svg class="silhouette layer-sil" viewBox="0 0 1000 300" preserveAspectRatio="none" data-depth="0.6">
-        <defs>
-          <linearGradient id="hgrad" x1="0" x2="1">
-            <stop offset="0" stop-color="#052017" />
-            <stop offset="1" stop-color="#073227" />
-          </linearGradient>
-        </defs>
-        <path d="M0,200 C120,160 220,180 320,150 C420,120 520,190 620,140 C720,90 820,170 1000,140 L1000,300 L0,300 Z" fill="url(#hgrad)"></path>
-      </svg>
-      <div id="particles"></div>
-    </div>
-
-    <!-- App UI (single-screen, no scrolling) -->
-    <div class="app">
-      <!-- Left Sidebar -->
-      <aside class="sidebar">
-        <div class="logo">
-          <div class="joycon-left"></div>
-          <div class="screen-badge">EcoTrack</div>
-          <div class="joycon-right"></div>
-        </div>
-
-        <div class="profile">
-          <div class="avatar" title="shift+click to reset">🌱</div>
-          <div class="username">LPS Student</div>
-          <div class="lvl" id="userLevel">Lvl 1</div>
-        </div>
-
-        <nav class="nav">
-          <button class="nav-btn active" data-tab="home">🏠</button>
-          <button class="nav-btn" data-tab="missions">🎯</button>
-          <button class="nav-btn" data-tab="badges">🏅</button>
-          <button class="nav-btn" data-tab="stats">📊</button>
-        </nav>
-
-        <div class="sidebar-footer">
-          <small>Carbon Quest</small>
-        </div>
-      </aside>
-
-      <!-- Main panel -->
-      <main class="main">
-
-        <!-- Top row: Score + Apps + Buddy -->
-        <section class="top-row">
-          <div class="score-card">
-            <div class="ring-wrap">
-              <svg class="ring" viewBox="0 0 120 120" aria-hidden>
-                <defs>
-                  <linearGradient id="g1" x1="0" x2="1">
-                    <stop offset="0" stop-color="#A7F3D0"/>
-                    <stop offset="1" stop-color="#34D399"/>
-                  </linearGradient>
-                </defs>
-                <circle class="ring-bg" cx="60" cy="60" r="48"></circle>
-                <circle class="ring-fill" cx="60" cy="60" r="48" stroke="url(#g1)"></circle>
-              </svg>
-              <div class="score-inner">
-                <div class="score-value" id="carbonScore">0 kg</div>
-                <div class="score-sub">Carbon Saved</div>
-              </div>
-            </div>
-
-            <div class="xp-panel">
-              <div class="xp-bar">
-                <div class="xp-fill" id="xpFill"></div>
-              </div>
-              <div class="xp-info">
-                <div id="xpText">0 / 100 XP</div>
-                <div class="next-goal">Next: <span id="nextGoal">100 XP</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="apps-compact">
-            <!-- compact horizontal app launcher -->
-            <div class="app-compact-title">Apps</div>
-            <div class="apps-row">
-              <div class="app-item compact" data-app="ai"><img src="resources/logo/AI.png"><span>ai+</span></div>
-              <div class="app-item compact" data-app="carbon"><img src="resources/logo/carbon.png"><span>carbon</span></div>
-              <div class="app-item compact" data-app="chat"><img src="resources/logo/chats.png"><span>chats</span></div>
-              <div class="app-item compact" data-app="news"><img src="resources/logo/news.png"><span>news</span></div>
-              <div class="app-item compact" data-app="notes"><img src="resources/logo/notes.png"><span>notes</span></div>
-              <div class="app-item compact" data-app="weather"><img src="resources/logo/weather.png"><span>weather</span></div>
-            </div>
-          </div>
-
-          <div class="buddy-card">
-            <div class="buddy">
-              <div class="buddy-face" id="buddyFace">🌍</div>
-              <div class="buddy-speech" id="buddySpeech">Let's earn Earth Points!</div>
-            </div>
-
-            <div class="quick-actions">
-              <button class="action" data-action="log-bike">🚴</button>
-              <button class="action" data-action="log-recycle">♻️</button>
-              <button class="action" data-action="log-meat">🥗</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Middle row: Missions (left) + Recent (center) + Right (badges/leaderboard) -->
-        <section class="mid-row">
-          <div class="missions-panel">
-            <h3>Daily Missions</h3>
-            <div class="missions-grid" id="missionsGrid"></div>
-          </div>
-
-          <div class="activity-panel">
-            <h3>Recent Activity</h3>
-            <ul class="activity-list" id="activityList"></ul>
-          </div>
-
-          <div class="right-panel">
-            <div class="badges-panel">
-              <h3>Badges</h3>
-              <div class="badges" id="badgesArea"></div>
-            </div>
-
-            <div class="leaderboard">
-              <h3>Leaderboard</h3>
-              <ol id="leaderboardList">
-                <li><strong>You</strong> — <span id="lbYou">0</span> pts</li>
-                <li>Player2 — 320 pts</li>
-                <li>PlanetPal — 270 pts</li>
-              </ol>
-            </div>
-          </div>
-        </section>
-
-      </main>
+  <!-- Boot animation -->
+  <div id="boot" aria-hidden="true">
+    <div class="boot-center">
+      <div class="boot-logo">EcoTrack</div>
+      <div class="boot-sub">Carbon Quest</div>
+      <div class="boot-loader"><span></span><span></span><span></span></div>
     </div>
   </div>
 
-  <!-- Mission Template -->
+  <!-- Background video + overlay -->
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="resources/bg.mp4" type="video/mp4">
+  </video>
+  <div class="bg-overlay"></div>
+
+  <!-- Particles -->
+  <div id="particles" aria-hidden="true"></div>
+
+  <!-- App shell -->
+  <div id="shell" class="hidden">
+    <header class="topbar">
+      <div class="left-info">
+        <div class="brand-mini">EcoTrack</div>
+      </div>
+      <div class="center-info">
+        <div id="statusText" class="status">Welcome, Player</div>
+      </div>
+      <div class="right-info">
+        <div class="buddy-avatar" id="buddyFace" title="Buddy">🌍</div>
+      </div>
+    </header>
+
+    <main class="home">
+      <!-- Central app grid -->
+      <section class="center-grid" role="list" aria-label="Apps">
+        <!-- app tiles inserted in HTML for simplicity -->
+        <div class="app-tile" data-app="ai" tabindex="0">
+          <img src="resources/logo/AI.png" alt="AI">
+          <div class="app-label">AI+</div>
+        </div>
+
+        <div class="app-tile" data-app="carbon" tabindex="0">
+          <img src="resources/logo/carbon.png" alt="Carbon">
+          <div class="app-label">Carbon</div>
+        </div>
+
+        <div class="app-tile" data-app="chat" tabindex="0">
+          <img src="resources/logo/chats.png" alt="Chats">
+          <div class="app-label">Chats</div>
+        </div>
+
+        <div class="app-tile" data-app="news" tabindex="0">
+          <img src="resources/logo/news.png" alt="News">
+          <div class="app-label">News</div>
+        </div>
+
+        <div class="app-tile" data-app="notes" tabindex="0">
+          <img src="resources/logo/notes.png" alt="Notes">
+          <div class="app-label">Notes</div>
+        </div>
+
+        <div class="app-tile" data-app="weather" tabindex="0">
+          <img src="resources/logo/weather.png" alt="Weather">
+          <div class="app-label">Weather</div>
+        </div>
+      </section>
+
+      <!-- Small control strip below tiles -->
+      <section class="control-strip">
+        <button id="openMissions" class="ctrl">🎯 Missions</button>
+        <button id="openActivity" class="ctrl">🕘 Recent Activity</button>
+        <div class="score-compact" id="scoreCompact" title="Carbon saved & XP">
+          <svg viewBox="0 0 120 120" class="ring-small" aria-hidden>
+            <defs><linearGradient id="gSmall" x1="0" x2="1"><stop offset="0" stop-color="#A7F3D0"/><stop offset="1" stop-color="#34D399"/></linearGradient></defs>
+            <circle class="ring-bg" cx="60" cy="60" r="48"></circle>
+            <circle class="ring-fill" cx="60" cy="60" r="48" stroke="url(#gSmall)"></circle>
+          </svg>
+          <div class="score-mini">
+            <div id="carbonScore">0 kg</div>
+            <div id="xpText">0 XP</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal: Missions -->
+    <div class="modal" id="missionsModal" aria-hidden="true" role="dialog" aria-label="Daily missions">
+      <div class="modal-panel">
+        <button class="modal-close" data-close>✕</button>
+        <h3>Daily Missions</h3>
+        <div class="missions-grid" id="missionsGrid"></div>
+      </div>
+    </div>
+
+    <!-- Modal: Activity -->
+    <div class="modal" id="activityModal" aria-hidden="true" role="dialog" aria-label="Recent activity">
+      <div class="modal-panel">
+        <button class="modal-close" data-close>✕</button>
+        <h3>Recent Activity</h3>
+        <ul class="activity-list" id="activityList"></ul>
+      </div>
+    </div>
+
+    <!-- Toast / temporary flash -->
+    <div id="toast" aria-hidden="true"></div>
+  </div>
+
   <template id="missionTpl">
     <div class="mission-card">
       <div class="mission-left"><div class="mission-emoji">🚲</div></div>
       <div class="mission-middle">
-        <div class="mission-title">Ride a bike</div>
-        <div class="mission-desc">Short trip under 5km</div>
+        <div class="mission-title">Title</div>
+        <div class="mission-desc">description</div>
       </div>
       <div class="mission-right">
-        <div class="mission-reward">+2 kg</div>
+        <div class="mission-reward">+0 kg</div>
         <button class="btn-do">Do</button>
       </div>
     </div>
