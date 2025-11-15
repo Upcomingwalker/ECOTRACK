@@ -146,7 +146,7 @@ function populateLeaderboard(){ document.getElementById('lbYou').textContent = M
 // -----------------------------
 // App routing (open pages)
 // -----------------------------
-const appRoutes = { ai:"ai.html", carbon:"carbon.html", chat:"chats.html", news:"news.html", notes:"notes.html", weather:"weather.html" };
+const appRoutes = { ai:"ai.html", carbon:"carbon.html", chat:"chat.html", news:"news.html", notes:"notes.html", weather:"weather.html" };
 document.addEventListener('click', (e)=>{
   const app = e.target.closest('.app-item');
   if(app){
@@ -250,3 +250,4 @@ window._eco_state = state;
 
 // CSS injection for temp flash (keeps file single)
 const style = document.createElement('style'); style.textContent = `.temp-flash{will-change:transform,opacity;border-radius:8px}`; document.head.appendChild(style);
+
