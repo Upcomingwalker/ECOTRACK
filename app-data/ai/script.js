@@ -1,17 +1,9 @@
-// ===============================
-// FLAT AI (Puter v2 API)
-// ===============================
-
 const API_URL = "https://api.puter.com/v2/ai/chat/completions";
-
 const chatMessages = document.getElementById("chatMessages");
 const messageInput = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
 const loaderOverlay = document.getElementById("loaderOverlay");
 
-// ------------------------------
-// Offline fallback messages
-// ------------------------------
 const fallback = {
     default: "I'm here to help with sustainability, recycling, saving energy, and eco-friendly living! 🌱",
     hello: "Hello! I’m FLAT AI, your eco-friendly assistant 🌱",
@@ -20,9 +12,6 @@ const fallback = {
     water: "Take shorter showers, fix leaks, use water-efficient taps."
 };
 
-// ------------------------------
-// UI Message Renderer
-// ------------------------------
 function addMessage(content, isUser = false, isError = false) {
     const msg = document.createElement("div");
     msg.className = `message ${isUser ? "user" : "assistant"}`;
@@ -43,9 +32,6 @@ function addMessage(content, isUser = false, isError = false) {
 function showLoader() { loaderOverlay?.classList.add("active"); }
 function hideLoader() { loaderOverlay?.classList.remove("active"); }
 
-// ------------------------------
-// Main Send Function
-// ------------------------------
 async function sendMessage() {
     const message = messageInput.value.trim();
     if (!message) return;
@@ -56,7 +42,6 @@ async function sendMessage() {
     showLoader();
 
     try {
-        // PUTER AI REQUEST
         const res = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -64,9 +49,7 @@ async function sendMessage() {
                 messages: [
                     {
                         role: "system",
-                        content:
-                            "You are FLAT AI, an eco-friendly assistant created by Tanuj Sharma and Sparsh Jain. " +
-                            "Speak simply and helpfully. Always be sustainability-focused."
+                        content: "You are FLAT AI, an eco-friendly assistant created by Tanuj Sharma and Sparsh Jain. Speak simply and helpfully. Always be sustainability-focused."
                     },
                     { role: "user", content: message }
                 ]
@@ -76,29 +59,21 @@ async function sendMessage() {
         if (!res.ok) throw new Error("HTTP " + res.status);
 
         const data = await res.json();
-
         const reply = data?.choices?.[0]?.message?.content || fallback.default;
-
         hideLoader();
         addMessage(reply);
     } catch (err) {
         hideLoader();
         addMessage("❌ Connection error. Using offline mode.", false, true);
-
-        // KEYWORD FALLBACK
         const key = Object.keys(fallback).find(k =>
             message.toLowerCase().includes(k)
         );
-
         addMessage(fallback[key] || fallback.default);
     }
 
     sendButton.disabled = false;
 }
 
-// ------------------------------
-// Input Handlers
-// ------------------------------
 sendButton.addEventListener("click", sendMessage);
 
 messageInput.addEventListener("keydown", e => {
