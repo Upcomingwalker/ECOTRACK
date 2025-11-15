@@ -3,7 +3,7 @@
 // All CORS fixes combined with automatic fallback
 // ===============================
 
-const API_KEY = "AIzaSyDMR8XhT8hVtqJ9pN_example_key_replace_this"; // REPLACE WITH YOUR KEY
+const API_KEY = "AIzaSyBUrK-Be7y6wUwctZVf6Tul2amgvqJo20Q"; // REPLACE WITH YOUR KEY
 
 // Multiple CORS proxy options for maximum reliability
 const CORS_PROXIES = [
@@ -34,7 +34,8 @@ const fallback = {
     water: "Take shorter showers, fix leaks, use water-efficient taps.",
     recycle: "Sort waste properly: paper, plastic, glass, metal. Check local guidelines.",
     transport: "Use public transport, bike, walk, or carpool. Consider electric vehicles.",
-    food: "Buy local, reduce meat consumption, compost food waste, avoid single-use packaging."
+    food: "Buy local, reduce meat consumption, compost food waste, avoid single-use packaging.",
+    plant: "🌱 How to Plant a Seed (Step-by-Step):\n\n1. Choose Your Container: Use seedling trays or small pots with drainage holes at the bottom.\n\n2. Fill with Soil: Use quality germination mix or potting soil. Fill containers almost to the top (leave 1/2 inch space).\n\n3. Make Holes: Use a pencil to create small holes. Plant seeds 3-4 times deeper than the seed's diameter (tiny seeds need just a light covering, larger seeds go deeper).\n\n4. Place Seeds: Drop 1-2 seeds per hole. For small seeds like lettuce, sprinkle lightly on top.\n\n5. Cover with Soil: Gently cover seeds with a thin layer of soil. Don't compact it!\n\n6. Water Gently: Mist spray until soil is thoroughly moist but not waterlogged. Water should drain from bottom holes.\n\n7. Location: Place in a spot with plenty of natural light but avoid harsh direct sunlight initially.\n\n8. Keep Moist: Mist daily or when soil surface dries. Cover tray with plastic dome if available to maintain humidity.\n\n9. Wait for Germination: Most seeds sprout in 5-14 days. Be patient!\n\n10. Transplant: When seedlings have 2-3 true leaves, move to bigger pots or garden bed.\n\nPro Tips:\n• Soak large seeds (beans, peas) overnight before planting\n• Label your plants with name and date\n• Morning watering is best\n• Add compost for nutrient-rich soil\n• Give each plant space to grow - don't overcrowd!\n\nHappy planting! 🌿"
 };
 
 // ------------------------------
@@ -165,6 +166,11 @@ async function sendWithProxy(message, proxyIndex = 0) {
 function getSmartFallback(message) {
     const lowerMsg = message.toLowerCase();
     
+    // Check for planting-related keywords
+    if (lowerMsg.match(/plant|seed|grow|garden|sow|germinate|seedling/i)) {
+        return fallback.plant;
+    }
+    
     // Find best matching keyword
     const matchedKey = Object.keys(fallback).find(key => 
         lowerMsg.includes(key)
@@ -183,8 +189,12 @@ function getSmartFallback(message) {
         return "Climate action starts at home! Reduce your carbon footprint by using renewable energy, minimizing waste, choosing sustainable transport, and supporting eco-friendly businesses. 🌡️";
     }
     
+    if (lowerMsg.match(/compost|organic|waste/i)) {
+        return "Composting is amazing for the environment! Start with fruit/vegetable scraps, coffee grounds, eggshells, and yard waste. Avoid meat, dairy, and oils. Layer green (nitrogen) and brown (carbon) materials, keep moist, and turn regularly. 🌾";
+    }
+    
     if (lowerMsg.match(/how|what|why|when|where/i)) {
-        return "I'm here to help! Ask me about recycling, energy saving, sustainable living, eco-friendly products, or any green lifestyle tips. 🌿";
+        return "I'm here to help! Ask me about recycling, energy saving, sustainable living, eco-friendly products, gardening, planting, or any green lifestyle tips. 🌿";
     }
     
     return fallback.default;
@@ -286,7 +296,7 @@ window.addEventListener("load", async () => {
     }
     
     // Show welcome message
-    addMessage("Hello! I'm FLAT AI, your eco-friendly assistant. Ask me anything about sustainability, recycling, energy saving, or green living! 🌱");
+    addMessage("Hello! I'm FLAT AI, your eco-friendly assistant. Ask me anything about sustainability, recycling, energy saving, planting, or green living! 🌱");
 });
 
 // ------------------------------
@@ -299,5 +309,6 @@ window.FLAT_DEBUG = {
     },
     testSDK: () => initGeminiSDK(),
     testProxy: (index = 0) => sendWithProxy("test", index),
-    switchProxy: (index) => { currentProxyIndex = index; }
+    switchProxy: (index) => { currentProxyIndex = index; },
+    showPlantGuide: () => addMessage(fallback.plant)
 };
