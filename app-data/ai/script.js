@@ -228,4 +228,3 @@ addMessage = function(content, isUser = false, isError = false) {
     }
     return originalAddMessage(content, isUser, isError);
 };
-
