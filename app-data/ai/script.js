@@ -1,4 +1,4 @@
-const API_KEY = 'AIzaSyDuu4VTElp41a41v0ri6auuk9LurwntnKg'; 
+const API_KEY = 'AIzaSyBUrK-Be7y6wUwctZVf6Tul2amgvqJo20Q'; 
 const USE_DEMO_MODE = false;
 
 const chatMessages = document.getElementById('chatMessages');
@@ -228,3 +228,4 @@ addMessage = function(content, isUser = false, isError = false) {
     }
     return originalAddMessage(content, isUser, isError);
 };
+
